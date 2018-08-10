@@ -33,7 +33,7 @@ class Customers extends MY_Controller
         $this->data['action'] = $action;
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('customers')));
         $meta = array('page_title' => lang('customers'), 'bc' => $bc);
-        $this->page_construct('customers/index', $meta, $this->data);
+        $this->page_construct('sig/customers/index', $meta, $this->data);
     }
 
     function getCustomers()
@@ -114,7 +114,7 @@ class Customers extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['customer_groups'] = $this->companies_model->getAllCustomerGroups();
-            $this->load->view($this->theme . 'customers/add', $this->data);
+            $this->load->view($this->theme . 'sig/customers/add', $this->data);
         }
     }
 
@@ -178,7 +178,7 @@ class Customers extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['customer_groups'] = $this->companies_model->getAllCustomerGroups();
-            $this->load->view($this->theme . 'customers/edit', $this->data);
+            $this->load->view($this->theme . 'sig/customers/edit', $this->data);
         }
     }
 
@@ -195,7 +195,7 @@ class Customers extends MY_Controller
         $this->data['modal_js'] = $this->site->modal_js();
         $this->data['company'] = $this->companies_model->getCompanyByID($company_id);
         $this->data['users'] = $this->companies_model->getCompanyUsers($company_id);
-        $this->load->view($this->theme . 'customers/users', $this->data);
+        $this->load->view($this->theme . 'sig/customers/users', $this->data);
 
     }
 
@@ -240,7 +240,7 @@ class Customers extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['company'] = $company;
-            $this->load->view($this->theme . 'customers/add_user', $this->data);
+            $this->load->view($this->theme . 'sig/customers/add_user', $this->data);
         }
     }
 
@@ -325,7 +325,7 @@ class Customers extends MY_Controller
 
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
-            $this->load->view($this->theme . 'customers/import', $this->data);
+            $this->load->view($this->theme . 'sig/customers/import', $this->data);
         }
     }
 
@@ -514,7 +514,7 @@ class Customers extends MY_Controller
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['modal_js'] = $this->site->modal_js();
         $this->data['company'] = $this->companies_model->getCompanyByID($company_id);
-        $this->load->view($this->theme . 'customers/deposits', $this->data);
+        $this->load->view($this->theme . 'sig/customers/deposits', $this->data);
 
     }
 
@@ -578,7 +578,7 @@ class Customers extends MY_Controller
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['company'] = $company;
-            $this->load->view($this->theme . 'customers/add_deposit', $this->data);
+            $this->load->view($this->theme . 'sig/customers/add_deposit', $this->data);
         }
     }
 
@@ -631,7 +631,7 @@ class Customers extends MY_Controller
             $this->data['modal_js'] = $this->site->modal_js();
             $this->data['company'] = $company;
             $this->data['deposit'] = $deposit;
-            $this->load->view($this->theme . 'customers/edit_deposit', $this->data);
+            $this->load->view($this->theme . 'sig/customers/edit_deposit', $this->data);
         }
     }
 
@@ -651,7 +651,7 @@ class Customers extends MY_Controller
         $this->data['customer'] = $this->companies_model->getCompanyByID($deposit->company_id);
         $this->data['deposit'] = $deposit;
         $this->data['page_title'] = $this->lang->line("deposit_note");
-        $this->load->view($this->theme . 'customers/deposit_note', $this->data);
+        $this->load->view($this->theme . 'sig/customers/deposit_note', $this->data);
     }
 
 }

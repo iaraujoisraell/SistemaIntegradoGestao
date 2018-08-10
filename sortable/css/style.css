@@ -1,0 +1,8 @@
+ul.sortable {width: 100%; float: left; margin: 20px 0; list-style: none; position: relative !important;}
+ul.sortable li {cursor: move;}
+ul.sortable li.ui-sortable-helper {border-color: #3498db;}
+ul.sortable li.placeholder {height: 50px; background: #eee; border: 2px dashed #bbb; display: block; opacity: 0.6;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}

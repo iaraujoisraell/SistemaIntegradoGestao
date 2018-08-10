@@ -74,7 +74,7 @@
           </a>
           <ul class="treeview-menu">
             <li <?php if($ativo == "regras"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/regras'); ?>"><i class="fa fa-cog"></i>Regras</a></li>
-            <li <?php if($ativo == "emprestimo"){ ?> class="active" <?php } ?>> <a href="<?= site_url('Sig/bi_emprestimo'); ?>"><i class="fa fa-users"></i> Clientes</a></li>
+            <li <?php if($ativo == "cliente"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/clientes'); ?>"><i class="fa fa-users"></i> Clientes</a></li>
           </ul>
         </li>
        

@@ -100,5 +100,32 @@ class AudCon_model extends CI_Model
             return $data;
         }
     }
+    
+     public function getClientes($limit)
+    {
+        $this->db->select('*');
+        if($limit){
+        $this->db->limit($limit);
+        }
+        $q = $this->db->get_where('companies', array('group_id' => 3, 'audcon' => 1));//
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+    
+     public function addUserSistema($data)
+    {
+        
+        if ($this->db->insert('user_sistema', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
 
 }

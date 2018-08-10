@@ -88,7 +88,7 @@ class Companies_model extends CI_Model
 
     public function addCompany($data = array())
     {
-       //print_r($data); exit;
+       //mprint_r($data); exit;
         if ($this->db->insert('companies', $data)) {
             $cid = $this->db->insert_id();
             return $cid;
@@ -96,6 +96,8 @@ class Companies_model extends CI_Model
 
         return false;
     }
+    
+    
 
     public function updateCompany($id, $data = array())
     {
