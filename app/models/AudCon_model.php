@@ -116,6 +116,18 @@ class AudCon_model extends CI_Model
         }
     }
     
+     public function getClientesAtivos()
+    {
+     
+        $q = $this->db->get_where('companies', array('group_id' => 3, 'audcon' => 1, 'status' => 1));//
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
     
      public function addUserSistema($data)
     {
@@ -127,5 +139,61 @@ class AudCon_model extends CI_Model
 
         return false;
     }
+    
+       public function getClienteById($id)
+    {
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('companies', array('id' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
+     public function updateCliente($id, $data  = array(), $data_user  = array())
+    {  
+       
+        if ($this->db->update('companies', $data, array('id' => $id))) {
+            
+          $this->db->update('users', $data_user, array('company_id' => $id));
+            
+         return true;
+        }
+        return false;
+    }
+    
+      public function getAnalises()
+    {
+        $this->db->select('*')
+        ->order_by('id', 'desc');
+        $q = $this->db->get('risk_analises');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+    public function addAnalise($data = array())
+    {
+       
+        if ($this->db->insert('risk_analises', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+    /*
+     *  public function getCustomerSales($id)
+    {
+        $this->db->where('customer_id', $id)->from('sales');
+        return $this->db->count_all_results();
+    }
+     */
 
 }

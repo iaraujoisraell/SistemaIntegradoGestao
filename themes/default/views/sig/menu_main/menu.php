@@ -9,13 +9,13 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php  $this->load->view($this->theme . 'menu_head'); ?>
+<?php  $this->load->view($this->theme . 'sig/menu_main/menu_head'); ?>
  
 <body>
 
     <div id="wrapper">
 
-        <?php  $this->load->view($this->theme . 'top'); ?>
+        <?php  $this->load->view($this->theme . 'sig/menu_main/top'); ?>
 
        
         <!-- end SIDE NAVIGATION -->
@@ -29,7 +29,7 @@
                
                
                 <!-- ATALHOS RÁPIDO -->
-                <?php  $this->load->view($this->theme . 'atalhos'); ?>
+                <?php  $this->load->view($this->theme . 'sig/menu_main/atalhos'); ?>
                 
                 
                 

@@ -28,6 +28,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
   
   <?php  $this->load->view($this->theme . 'audcon/menu_esquerdo'); ?>
   <!-- Content Wrapper. Contains page content -->
+  <div class="div-ajax-carregamento-pagina">
+        <div class="col-md-12">
+          <div class="box  box-solid">
+            <div class="box-header">
+              <h3 class="box-title">Aguarde</h3>
+            </div>
+            <div class="box-body">
+              Carregando
+            </div>
+            <!-- /.box-body -->
+            <!-- Loading (remove the following to stop the loading)-->
+            <div class="overlay">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <!-- end loading -->
+          </div>
+          <!-- /.box -->
+        </div>
+    </div>
+  
   
   <?php echo  $this->load->view($this->theme . $pagina); ?>
   

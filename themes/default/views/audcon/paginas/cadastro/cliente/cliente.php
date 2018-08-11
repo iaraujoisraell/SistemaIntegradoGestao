@@ -1,4 +1,3 @@
-
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -37,7 +36,24 @@
     
     <!-- Main content -->
     <section class="content">
-     
+      <?php if ($Settings->mmode) { ?>
+                        <div class="alert alert-warning">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <?= lang('site_is_offline') ?>
+                        </div>
+                    <?php }
+                    if ($error) { ?>
+                        <div class="alert alert-danger">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <ul class="list-group"><?= $error; ?></ul>
+                        </div>
+                    <?php }
+                    if ($message) { ?>
+                        <div class="alert alert-success">
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <ul class="list-group"><?= $message; ?></ul>
+                        </div>
+                    <?php } ?>
       <div class="row">
           <div class="col-lg-3">
               <button style="margin-bottom: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-insert">
@@ -64,26 +80,28 @@
                   <th>Cidade</th>
                   <th>Telefone</th>
                   <th>Email</th>
-                  <th>EDITAR</th>
-                  <th>EXCLUIR</th>
+                  <th>Status</th> 
+                  <th>Editar</th>
+                  <th> opção </th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
-                                                
+                    $cont = 1;                            
                    $clientes = $this->AudCon_model->getClientes();
                     foreach ($clientes as $cli) {
                 ?>   
                 
                 <tr>
-                  <td><?php echo $cli->id; ?></td>  
+                  <td><?php echo $cont++; ?></td>  
                   <td><?php echo $cli->company; ?></td>
               
                   <td><?php echo $cli->city; ?></td>
                   <td><?php echo $cli->phone; ?></td>
                   <td><?php echo $cli->email; ?></td>
-                     <td><a href="editarPaciente.php?cpf=<?php echo $row['CPF'] ?>"><i class="fa fa-edit"></i></a></td>
-                                               <td><a href="app/processaPacientes.php?tipo=delete&cpf=<?php echo $row['CPF'] ?>"><i class="fa fa-trash-o"></i></a></td>
+                  <td><?php if($cli->status == 1){ ?> <button class="btn btn-success">ATIVO</button>   <?php }else if($cli->status == 0){ ?> <button class="btn btn-danger">INATIVO</button>   <?php } ?></td>
+                  <td><a href="edit_cliente/<?php echo $cli->id; ?>"><i class="fa fa-edit"></i></a></td>
+                  <td><?php if($cli->status == 1){ ?><a class="btn btn-white" href="inativa_cliente/<?php echo $cli->id;?>"><i class="fa fa-close"></i>Inativar</a><?php }if($cli->status == 0){ ?><a class="btn btn-white" href="ativa_cliente/<?php echo $cli->id;?>"><i class="fa fa-plus"> Ativar</i></a><?php } ?> </td>
                                           
                 </tr>
                 <?php
@@ -97,8 +115,9 @@
                   <th>Cidade</th>
                   <th>Telefone</th>
                   <th>Email</th>
-                  <th>EDITAR</th>
-                  <th>EXCLUIR</th>
+                  <th>Status</th>  
+                  <th>Editar</th>
+                   <th> opção </th>
                 </tr>
                 </tfoot>
               </table>
@@ -192,5 +211,6 @@
             <!-- /.modal-content -->
           </div>
         </div>
+
 
  

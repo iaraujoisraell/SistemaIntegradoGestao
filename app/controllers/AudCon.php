@@ -45,6 +45,47 @@ class AudCon extends MY_Controller
         
     }
     
+     function add_analise()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('cliente', lang("Cliente"), 'required');
+         $this->form_validation->set_rules('periodo_de', lang("Período de"), 'required');
+         $this->form_validation->set_rules('periodo_ate', lang("Período até"), 'required');
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+           /*
+            * CADASTRA O CLIENTE
+            */
+         
+            $data = array(
+                'cliente' => $this->input->post('cliente'),
+                'dt_solicitacao' => date('Y-m-d'),
+                'carga' => $this->input->post('carga'),
+                'periodo_de' => $this->input->post('periodo_de'),
+                'periodo_ate' => $this->input->post('periodo_ate'),
+                'status' => 0
+                
+              
+            );
+           
+           
+            $this->AudCon_model->addAnalise($data);
+            $this->session->set_flashdata('message', lang("Análise cadastrada com sucesso!"));
+            
+            redirect('AudCon');
+          
+        }else  {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon');
+        }
+
+     
+    }
+    
       public function modulo1($limite) {
        
         
@@ -182,7 +223,7 @@ class AudCon extends MY_Controller
          }else{
             $this->data['limite'] = '100';
          }
-         $pagina = 'audcon/paginas/cadastro/cliente';
+         $pagina = 'audcon/paginas/cadastro/cliente/cliente';
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
@@ -212,7 +253,9 @@ class AudCon extends MY_Controller
                 'city' => $this->input->post('city'),
                 'state' => $this->input->post('state'),
                 'phone' => $this->input->post('phone'),
-                'audcon' => 1
+                'postal_code' => $this->input->post('postal_code'),
+                'audcon' => 1,
+                'status' => 1
               
             );
            $cid = $this->companies_model->addCompany($data);
@@ -249,7 +292,7 @@ class AudCon extends MY_Controller
             $this->AudCon_model->addUserSistema($data_user_sis);
            
             $this->session->set_flashdata('message', lang("customer_added"));
-            $ref = isset($_SERVER["HTTP_REFERER"]) ? explode('?', $_SERVER["HTTP_REFERER"]) : NULL;
+            
             redirect('AudCon/clientes');
           
         } elseif ($this->input->post('add_customer')) {
@@ -265,66 +308,123 @@ class AudCon extends MY_Controller
     {
         $this->sma->checkPermissions(false, true);
         $this->form_validation->set_rules('company', lang("company"), 'required');
-         $this->form_validation->set_rules('name', lang("name"), 'required');
-        if ($this->input->get('id')) {
-            $id = $this->input->get('id');
-        }
+         $this->form_validation->set_rules('email', lang("name"), 'required');
+        
 
-        $company_details = $this->companies_model->getCompanyByID($id);
-        if ($this->input->post('email') != $company_details->email) {
-            $this->form_validation->set_rules('code', lang("email_address"), 'is_unique[companies.email]');
-        }
+       // $company_details = $this->companies_model->getCompanyByID($id);
+       // if ($this->input->post('email') != $company_details->email) {
+        //    $this->form_validation->set_rules('code', lang("email_address"), 'is_unique[companies.email]');
+       // }
 
         if ($this->form_validation->run('companies/add') == true) {
-            $cg = $this->site->getCustomerGroupByID($this->input->post('customer_group'));
-               $ie = $this->input->post('cf1');
             
-            if($ie){
-                $indicacaoCliente = '1';
-            }else{
-                $indicacaoCliente = '9';
-            }
-            $data = array('name' => $this->input->post('name'),
+            
+            /*
+            * CADASTRA O CLIENTE
+            */
+         
+            $data = array(
+                'company' => $this->input->post('company'),
+                'name' => $this->input->post('name'),
                 'email' => $this->input->post('email'),
                 'group_id' => '3',
                 'group_name' => 'customer',
-                'customer_group_id' => $this->input->post('customer_group'),
-                'customer_group_name' => $cg->name,
-                'company' => $this->input->post('company'),
-                'address' => $this->input->post('address'),
                 'vat_no' => $this->input->post('vat_no'),
+                'address' => $this->input->post('address'),
                 'city' => $this->input->post('city'),
                 'state' => $this->input->post('state'),
-                'postal_code' => $this->input->post('postal_code'),
-                'country' => $this->input->post('country'),
                 'phone' => $this->input->post('phone'),
-                'cf1' => $this->input->post('cf1'),
-                'cf2' => $this->input->post('cf2'),
-                'cf3' => $this->input->post('cf3'),
-                'cf4' => $this->input->post('cf4'),
-                'cf5' => $this->input->post('cf5'),
-                'cf6' => $this->input->post('cf6'),
-                'award_points' => $this->input->post('award_points'),
-                'indicacaoCliente' => $indicacaoCliente,
-                'codigoMunicipio' => '1302603',
+                'postal_code' => $this->input->post('postal_code')
+              
             );
-        } elseif ($this->input->post('edit_customer')) {
-            $this->session->set_flashdata('error', validation_errors());
-            redirect($_SERVER["HTTP_REFERER"]);
-        }
-
-        if ($this->form_validation->run() == true && $this->companies_model->updateCompany($id, $data)) {
-            $this->session->set_flashdata('message', lang("customer_updated"));
-            redirect($_SERVER["HTTP_REFERER"]);
+            
+            $additional_user = array(
+                'first_name' => $this->input->post('company'),
+                'phone' => $this->input->post('phone'),
+                'email' => $this->input->post('email'),
+                'username' => $this->input->post('email')
+            );
+            
+            $id = $this->input->post('id');
+           
+            $cid = $this->AudCon_model->updateCliente($id, $data, $additional_user);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Alterado com Sucesso! "));
+            
+            redirect('AudCon/clientes');
+           
         } else {
-            $this->data['customer'] = $company_details;
-            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['modal_js'] = $this->site->modal_js();
-            $this->data['customer_groups'] = $this->companies_model->getAllCustomerGroups();
-            $this->load->view($this->theme . 'sig/customers/edit', $this->data);
+            
+        
+            $this->data['ativo'] = 'cliente';
+            $this->data['layout'] = '';
+            $this->data['menu'] = 'cadastros';
+            if ($limite) {
+                $this->data['limite'] = '';
+            } else {
+                $this->data['limite'] = '100';
+            }
+            $this->data['id'] = $id;
+
+            $pagina = 'audcon/paginas/cadastro/cliente/edit_cliente';
+         $this->page_construct_novo($pagina, $meta, $this->data);
         }
     }
     
+    function inativa_cliente($id = NULL)
+    {
+       
+            /*
+            * CADASTRA O CLIENTE
+            */
+         
+            $data = array(
+                
+                'status' => 0
+              
+            );
+            
+            $additional_user = array(
+                'active' => 0
+            );
+            
+            $id_cliente = $id;
+           
+            $cid = $this->AudCon_model->updateCliente($id_cliente, $data, $additional_user);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Inativado com Sucesso! "));
+            
+            redirect('AudCon/clientes');
+           
+         
+    }
     
+    function ativa_cliente($id = NULL)
+    {
+       
+            /*
+            * CADASTRA O CLIENTE
+            */
+         
+            $data = array(
+                
+                'status' => 1
+              
+            );
+            
+            $additional_user = array(
+                'active' => 1
+            );
+            
+            $id_cliente = $id;
+           
+            $cid = $this->AudCon_model->updateCliente($id_cliente, $data, $additional_user);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Ativado com Sucesso! "));
+            
+            redirect('AudCon/clientes');
+           
+         
+    }
   
 }

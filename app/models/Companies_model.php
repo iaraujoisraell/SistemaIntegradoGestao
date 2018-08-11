@@ -98,6 +98,7 @@ class Companies_model extends CI_Model
     }
     
     
+    
 
     public function updateCompany($id, $data = array())
     {
