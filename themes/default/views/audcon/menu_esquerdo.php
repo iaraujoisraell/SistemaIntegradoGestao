@@ -47,7 +47,18 @@
           </a>
         </li>
         
-       
+       <li <?php if($menu == "regras"){ ?> class="active" <?php } ?>>
+          <a href="<?= site_url('AudCon/regras'); ?>">
+            <i class="fa fa-cog"></i> <span>Regras e Condições</span>
+            
+          </a>
+        </li>
+        <li <?php if($menu == "analise"){ ?> class="active" <?php } ?>>
+          <a href="<?= site_url('AudCon/modulo4'); ?>">
+            <i class="fa fa-th"></i> <span>Procedimentos TUSS</span>
+            
+          </a>
+        </li>
         <li  <?php if($menu == "parametrizacao"){ ?> active <?php } ?> class="treeview">
           <a href="#">
             <i class="fa  fa-gears"></i>
@@ -60,7 +71,7 @@
             <li <?php if($ativo == "modulo1"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo1'); ?>"><i class="fa fa-reorder"></i> Tabelas</a></li>
             <li <?php if($ativo == "modulo2"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo2'); ?>"><i class="fa fa-signal"></i> Coberturas X Planos</a></li>
             <li <?php if($ativo == "modulo3"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo3'); ?>"><i class="fa  fa-gear"></i> SIP da ANS</a></li>
-            <li <?php if($ativo == "modulo4"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo4'); ?>"><i class="fa  fa-sliders "></i> Regras de Procedimentos</a></li>
+           
           </ul>
         </li>
         
@@ -73,8 +84,10 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li <?php if($ativo == "regras"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/regras'); ?>"><i class="fa fa-cog"></i>Regras</a></li>
             <li <?php if($ativo == "cliente"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/clientes'); ?>"><i class="fa fa-users"></i> Clientes</a></li>
+            <li <?php if($ativo == "estrutura"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/estrutura_cliente'); ?>"><i class="fa fa-cog"></i> Estrutura</a></li>
+              <li <?php if($ativo == "valores"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/valoresRegras'); ?>"><i class="fa fa-cog"></i> Tipo Valores</a></li>
+        
           </ul>
         </li>
        

@@ -40,11 +40,27 @@ class AudCon extends MY_Controller
         $pagina = 'audcon/paginas/analises';
         
        $this->page_construct_novo($pagina, $meta, $this->data);
-        
-        
-        
     }
     
+    public function processamentos() {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         $this->data['ativo'] = 'cliente';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'cadastros';
+       
+         $pagina = 'audcon/paginas/processamentos';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+     
      function add_analise()
     {
         $this->sma->checkPermissions(false, true);
@@ -86,7 +102,7 @@ class AudCon extends MY_Controller
      
     }
     
-      public function modulo1($limite) {
+    public function modulo1($limite) {
        
         
         if ($this->Settings->version == '2.3') {
@@ -132,7 +148,6 @@ class AudCon extends MY_Controller
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
-    
     public function modulo3($limite) {
        
         
@@ -157,7 +172,7 @@ class AudCon extends MY_Controller
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
-     public function modulo4($limite) {
+    public function modulo4($limite) {
        
         
         if ($this->Settings->version == '2.3') {
@@ -181,7 +196,7 @@ class AudCon extends MY_Controller
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
 
-     public function regras($limite) {
+    public function regras($limite) {
        
         
         if ($this->Settings->version == '2.3') {
@@ -200,11 +215,223 @@ class AudCon extends MY_Controller
          }else{
             $this->data['limite'] = '100';
          }
-         $pagina = 'audcon/paginas/cadastro/regras';
+         $pagina = 'audcon/paginas/cadastro/regras/regras';
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
-     public function clientes($limite) {
+    function add_condicao()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        $id = $this->input->post('id_regra');
+        $this->form_validation->set_rules('cliente', lang("Valor Cliente"), 'required');
+        $this->form_validation->set_rules('valor2', lang("E-Valor Base"), 'required');
+         
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+             $data = array(
+                'valor_cliente' => $this->input->post('cliente'),
+                'condicao' => $this->input->post('condicao'),
+                'valor_base' => $this->input->post('valor2'),
+                'resultado' => $this->input->post('resultado'),
+                'id_regra' => $this->input->post('id_regra')
+            );
+            
+             $this->AudCon_model->addCondicaoRegra($data);
+           //
+            
+          
+            
+            redirect('AudCon/editar_regra/'.$id);
+          
+        } elseif ($this->input->post('add_customer')) {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon/editar_regra/'.$id);
+        }
+
+     
+    }
+    
+    function add_valor_condicao_Cadastro()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        $this->form_validation->set_rules('valor', lang("Valor"), 'required');
+        $this->form_validation->set_rules('descricao', lang("Descrição"), 'required');
+         
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+            $analises_total = $this->AudCon_model->getContOpcoesValoresRegra();
+            $posicao = $analises_total->quantidade;
+           
+            $data = array(
+                'valor' => $this->input->post('valor'),
+                'descricao' => $this->input->post('descricao'),
+                'posicao' => $posicao
+            );
+             $this->AudCon_model->addOpcaoValorRegra($data);
+            
+            redirect('AudCon/valoresRegras/');
+          
+        } elseif ($this->input->post('add_customer')) {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon/valoresRegras/');
+        }
+
+     
+    }
+    
+    function add_valor_condicao()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        $id = $this->input->post('id_regra');
+        
+        $this->form_validation->set_rules('valor', lang("Valor"), 'required');
+        $this->form_validation->set_rules('descricao', lang("Descrição"), 'required');
+         
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           $analises_total = $this->AudCon_model->getContOpcoesValoresRegra();
+            $posicao = $analises_total->quantidade;
+            $data = array(
+                'valor' => $this->input->post('valor'),
+                'descricao' => $this->input->post('descricao'),
+                'posicao' => $posicao
+            );
+             $this->AudCon_model->addOpcaoValorRegra($data);
+            
+            redirect('AudCon/editar_regra/'.$id);
+          
+        } elseif ($this->input->post('add_customer')) {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon/editar_regra/'.$id);
+        }
+
+     
+    }
+    
+    public function add_nova_regra() {
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+        
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('numero', lang("Empresa"), 'required');
+         $this->form_validation->set_rules('descricao', lang("E-mail"), 'required');
+         
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+             $data = array(
+                'sessao' => $this->input->post('numero'),
+                'descricao' => $this->input->post('descricao'),
+                'observacao' => $this->input->post('observacao'),
+                'estrutura_cliente' => $this->input->post('cliente')
+            );
+            //print_r($data);exit;
+            $this->AudCon_model->addNovaRegra($data);
+            
+            $this->session->set_flashdata('message', lang("Cadastro efetuado com sucesso!"));
+            redirect('AudCon/regras');
+             
+          } else{
+           
+            $this->session->set_flashdata('error', validation_errors());
+            
+            $this->data['ativo'] = 'regras';
+            $this->data['layout'] ='';
+            $this->data['menu'] = 'regras';
+            $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/cadastro/regras/editar_regra';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+        }
+         
+         
+        
+    }
+    
+    public function editar_regra($id) {
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+        
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('numero', lang("Empresa"), 'required');
+         $this->form_validation->set_rules('descricao', lang("E-mail"), 'required');
+         
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+             $data = array(
+                'sessao' => $this->input->post('numero'),
+                'descricao' => $this->input->post('descricao'),
+                'observacao' => $this->input->post('observacao'),
+                'estrutura_cliente' => $this->input->post('cliente')
+            );
+             $id = $this->input->post('id');
+            
+             $this->AudCon_model->updateRegra($id, $data);
+            
+             
+             $this->session->set_flashdata('message', lang("Cadastro Atualizado com Sucesso! "));
+            
+            $this->data['ativo'] = 'regras';
+            $this->data['layout'] ='';
+            $this->data['menu'] = 'regras';
+            $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/cadastro/regras/editar_regra';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+             
+          } else{
+           
+            $this->session->set_flashdata('error', validation_errors());
+            
+            $this->data['ativo'] = 'regras';
+            $this->data['layout'] ='';
+            $this->data['menu'] = 'regras';
+            $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/cadastro/regras/editar_regra';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+        }
+         
+         
+        
+    }
+    
+    function inativa_regra($id = NULL)
+    {
+         $data = array(
+                
+                'status' => 0
+              
+            );
+            
+            $id_cliente = $id;
+           //print_r($data);exit;
+            $cid = $this->AudCon_model->updateRegra($id_cliente, $data);
+            $this->session->set_flashdata('message', lang("Cadastro Inativado com Sucesso! "));
+            
+            redirect('AudCon/regras');
+           
+         
+    }
+    
+    public function clientes($limite) {
        
         
         if ($this->Settings->version == '2.3') {
@@ -227,7 +454,7 @@ class AudCon extends MY_Controller
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
-     function add_cliente()
+    function add_cliente()
     {
         $this->sma->checkPermissions(false, true);
 
@@ -427,4 +654,122 @@ class AudCon extends MY_Controller
          
     }
   
+    public function estrutura_cliente($limite) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        
+            
+         $this->data['ativo'] = 'estrutura';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'cadastros';
+        if($limite){
+             $this->data['limite'] = '';
+         }else{
+            $this->data['limite'] = '100';
+         }
+         $pagina = 'audcon/paginas/cadastro/estrutura_cliente/estrutura';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+    public  function add_estrutura_cliente()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('campo', lang("Nome Campo"), 'required');
+         $this->form_validation->set_rules('valores', lang("Valores"), 'required');
+         
+         
+        if ($this->form_validation->run('estrutura/add') == true) {
+           
+           $analises_total = $this->AudCon_model->getContEstrutura();
+            $posicao = $analises_total->quantidade;
+            
+             $data = array(
+                'nome' => $this->input->post('campo'),
+                'valores' => $this->input->post('valores'),
+                 'posicao' => $posicao
+                );
+     
+            $cid = $this->AudCon_model->addEstrutura_cliente($data);
+            $this->session->set_flashdata('message', lang("Cadastrado com Sucesso"));
+            
+            redirect('AudCon/estrutura_cliente');
+          
+        } else {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon/estrutura_cliente');
+        }
+
+     
+    }
+
+    public function delete_estrutura($id = NULL)
+    {    
+            $id_cliente = $id;
+           
+            $cid = $this->AudCon_model->deleteEstrutura($id);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Deletado com Sucesso! "));
+            
+            redirect('AudCon/estrutura_cliente');
+           
+         
+    }
+    
+    
+    public function delete_condicao($id, $regra)
+    {    
+        
+            $this->AudCon_model->deleteCondicaoRegra($id);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Deletado com Sucesso! "));
+            redirect('AudCon/editar_regra/'.$regra);
+           
+         
+    }
+    
+    public function valoresRegras($limite) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        
+            
+         $this->data['ativo'] = 'valores';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'cadastros';
+        if($limite){
+             $this->data['limite'] = '';
+         }else{
+            $this->data['limite'] = '100';
+         }
+         $pagina = 'audcon/paginas/cadastro/opcaoValor/valores';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+    public function delete_valores_regra($id = NULL)
+    {    
+            $id_cliente = $id;
+           
+            $cid = $this->AudCon_model->deleteOpcaoValor($id);
+            
+            $this->session->set_flashdata('message', lang("Cadastro Deletado com Sucesso! "));
+            
+            redirect('AudCon/valoresRegras');
+           
+         
+    }
+    
 }

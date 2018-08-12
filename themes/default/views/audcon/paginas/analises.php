@@ -135,17 +135,23 @@
                     $cont = 1;                            
                    $analises = $this->AudCon_model->getAnalises();
                     foreach ($analises as $cli) {
+                        //
+                        $cliente = $this->companies_model->getCompanyByID($cli->cliente);
+                        
+                        $status = $cli->status;
                 ?>   
                 
                 <tr>
                   <td><?php echo $cont++; ?></td>  
-                  <td><?php echo $cli->dt_solicitacao; ?></td>
-                  <td><?php echo $cli->cliente; ?></td>
+                  <td><?php echo date("d/m/Y", strtotime($cli->dt_solicitacao)); ?></td>
+                  <td><?php echo $cliente->company; ?></td>
                   <td><?php echo $cli->periodo_de; ?></td>
                   <td><?php echo $cli->periodo_ate; ?></td>
                   <td><?php echo $cli->carga; ?></td>
-                  <td><?php echo $cli->status; ?></td>
-                  <td> <button type="button" class="btn btn-block btn-success">Análise</button></td>
+                  <td><?php if($status == 0){ ?> <button class="btn btn-default">ABERTO</button>  <?php }else if($status == 1){ ?>   <?php }  ?></td>
+                  <td>
+                      <a href="audcon/processamentos/<?php echo $cli->id; ?>" class="btn btn-block btn-danger"><i class="fa fa-gears"></i> Análises</a>
+                      <button type="button" class="btn btn-block btn-success"><i class="fa fa-dashboard"></i> Dashboard</button></td>
                                           
                 </tr>
                 <?php

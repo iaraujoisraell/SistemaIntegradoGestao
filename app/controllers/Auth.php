@@ -622,12 +622,17 @@ class Auth extends MY_Controller
                     */                    
                     $cadastroUsuario = $this->site->getPerfilAtualSistemasByID($usuario);
                     $quantidade = $cadastroUsuario->quantidade;
-                    
+                  
+                          $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
+                  
+                    /*
                     if($quantidade > 1){
                         $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
                     }else{
                        $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu';    
                     }
+                     * 
+                     */
                 }
                 
               

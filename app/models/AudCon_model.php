@@ -86,7 +86,7 @@ class AudCon_model extends CI_Model
     
     public function getRegrasModulo($modulo)
     {
-        $this->db->select('risk_modulos.modulo as id_mod, risk_modulos.descricao_resumida as modulo, risk_modulos_sessao.sessao as sessao, risk_modulos_sessao.descricao as regra, risk_modulos_sessao.observacao as observacao ')
+        $this->db->select('risk_modulos_sessao.id as id_regra, risk_modulos.modulo as id_mod, risk_modulos.descricao_resumida as modulo, risk_modulos_sessao.sessao as sessao, risk_modulos_sessao.descricao as regra, risk_modulos_sessao.observacao as observacao ')
         ->join('risk_modulos', 'risk_modulos.id=risk_modulos_sessao.modulo', 'left');
         if($modulo){
             $q = $this->db->get_where('risk_modulos_sessao', array('modulo' => $modulo));
@@ -99,6 +99,147 @@ class AudCon_model extends CI_Model
             }
             return $data;
         }
+    }
+    
+       public function getRegrasById($id)
+    {
+        
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('risk_modulos_sessao', array('id' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
+    public function addNovaRegra($data = array())
+    {
+       
+        if ($this->db->insert('risk_modulos_sessao', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+    public function updateRegra($id, $data  = array())
+    {  
+       
+        if ($this->db->update('risk_modulos_sessao', $data, array('id' => $id))) {
+             
+         return true;
+        }
+        return false;
+    }
+    
+      public function getOpcoesValores()
+    {
+        $this->db->select('*')
+        ->order_by('posicao', 'asc');
+        $q = $this->db->get('risk_opcoes_valor');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+    public function getCondicaoRegraByRegra($id)
+    {
+        $this->db->select('*');
+        //->order_by('id', 'desc');
+        $q = $this->db->get_where('risk_regras_condicoes', array('id_regra' => $id));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+    public function getCondicaoRegra()
+    {
+        $this->db->select('*');
+        //->order_by('id', 'desc');
+        $q = $this->db->get('risk_regras_condicoes');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+       public function getOpcoesValorById($id)
+    {
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('risk_opcoes_valor', array('id' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
+    public function addCondicaoRegra($data = array())
+    {
+       
+        if ($this->db->insert('risk_regras_condicoes', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+    public function addOpcaoValorRegra($data = array())
+    {
+       
+        if ($this->db->insert('risk_opcoes_valor', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+    public function getContOpcoesValoresRegra()
+    {
+       
+         $this->db->select('count(id) as quantidade');
+        $q = $this->db->get('risk_opcoes_valor', 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+     }
+     
+     public function deleteOpcaoValor($id)
+    {  
+       
+        if($id){
+           $this->db->delete('risk_opcoes_valor', array('id' => $id));
+
+          return true;
+        }
+        return false;
+    }
+    
+    public function deleteCondicaoRegra($id)
+    {  
+       
+        if($id){
+           $this->db->delete('risk_regras_condicoes', array('id' => $id));
+
+          return true;
+        }
+        return false;
     }
     
      public function getClientes($limit)
@@ -164,7 +305,7 @@ class AudCon_model extends CI_Model
         return false;
     }
     
-      public function getAnalises()
+    public function getAnalises()
     {
         $this->db->select('*')
         ->order_by('id', 'desc');
@@ -195,5 +336,52 @@ class AudCon_model extends CI_Model
         return $this->db->count_all_results();
     }
      */
+    
+     public function getContEstrutura()
+    {
+       
+         $this->db->select('count(id) as quantidade');
+        $q = $this->db->get('risk_estrutura_regras_cliente', 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+     }
+    
+      public function getEstrutura()
+    {
+        $this->db->select('*')
+        ->order_by('posicao', 'asc');
+        $q = $this->db->get('risk_estrutura_regras_cliente');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+    public function addEstrutura_cliente($data = array())
+    {
+       
+        if ($this->db->insert('risk_estrutura_regras_cliente', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+    public function deleteEstrutura($id)
+    {  
+       
+        if($id){
+           $this->db->delete('risk_estrutura_regras_cliente', array('id' => $id));
+
+          return true;
+        }
+        return false;
+    }
 
 }

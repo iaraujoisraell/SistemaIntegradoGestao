@@ -55,18 +55,18 @@
                         </div>
                     <?php } ?>
       <div class="row">
-          <div class="col-lg-3">
-              <button style="margin-bottom: 20px;" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-insert">
-                            Novo Cadastro
-                        </button>
-          </div>
           
-           
         <!-- Left col -->
         <section class="col-lg-12 connectedSortable">
           <div class="box">
             <div class="box-header">
+             <span class="pull-right-container">
+              <div class="box-footer clearfix no-border">
+              <button  type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal-insert">
+                   <i class="fa fa-plus"></i>  Novo Cadastro </button>
+            </div>
              
+            </span>
             </div>
             <!-- /.box-header -->
            
