@@ -17,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = '';//'http://unimedwebteste/gerenciamentodeprojetos/'; http://sig.unimedmanaus.com.br/
+$config['base_url'] = '';//'http://unimedwebteste/gerenciamentodeprojetos/'; http://rando.com.br/sig/
 
 /*
 |--------------------------------------------------------------------------

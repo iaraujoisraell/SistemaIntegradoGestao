@@ -623,7 +623,7 @@ class Auth extends MY_Controller
                     $cadastroUsuario = $this->site->getPerfilAtualSistemasByID($usuario);
                     $quantidade = $cadastroUsuario->quantidade;
                   
-                          $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
+                          $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'sig/menu_sistemas'; 
                   
                     /*
                     if($quantidade > 1){
@@ -686,7 +686,7 @@ class Auth extends MY_Controller
         
         if (($login)&&($senha)) {
            // echo 'aqui 1'; exit;
-            $remember = (bool)$this->input->post('remember');
+            $remember = 1;// (bool)$this->input->post('remember');
 
             if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
                
@@ -711,11 +711,15 @@ class Auth extends MY_Controller
                     $cadastroUsuario = $this->site->getPerfilAtualSistemasByID($usuario);
                     $quantidade = $cadastroUsuario->quantidade;
                     
+                     $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
+                    /*
                     if($quantidade > 1){
-                        $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
+                       
                     }else{
                        $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu';    
                     }
+                     * 
+                     */
                     
                // $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu';    
                 }

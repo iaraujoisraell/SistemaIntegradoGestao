@@ -136,6 +136,7 @@ class MY_Controller extends CI_Controller {
         $meta['pagina'] = $page;
         $meta['id_cliente'] = $data['id'];
         $meta['id_regra'] = $data['id'];
+        $meta['id'] = $data['id'];
         
           $this->load->view($this->theme. 'audcon/main', $meta);
        

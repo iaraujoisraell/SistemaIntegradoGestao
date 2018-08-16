@@ -112,7 +112,7 @@
         <section class="col-lg-12 connectedSortable">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Análises Concluídas</h3>
+              <h3 class="box-title">Análises </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -126,6 +126,7 @@
                   <th>Perído Até</th>
                   <th>Carga Via</th>
                   <th>Status</th>
+                  <th>Editar</th>
                   <th>Opções</th>
                 </tr>
                 </thead>
@@ -148,10 +149,15 @@
                   <td><?php echo $cli->periodo_de; ?></td>
                   <td><?php echo $cli->periodo_ate; ?></td>
                   <td><?php echo $cli->carga; ?></td>
-                  <td><?php if($status == 0){ ?> <button class="btn btn-default">ABERTO</button>  <?php }else if($status == 1){ ?>   <?php }  ?></td>
+                  <td><?php if($status == 0){ ?> ABERTO  <?php }else if($status == 1){ ?> EM ANÁLISE <?php }else if($status == 2){ ?> CONCLUÍDO  <?php }  ?></td>
+                  <td>
+                      <a href="audcon/edit_analise/<?php echo $cli->id; ?>" ><i class="fa fa-edit"></i> Editar</a>
+                                          
+                </td>
                   <td>
                       <a href="audcon/processamentos/<?php echo $cli->id; ?>" class="btn btn-block btn-danger"><i class="fa fa-gears"></i> Análises</a>
-                      <button type="button" class="btn btn-block btn-success"><i class="fa fa-dashboard"></i> Dashboard</button></td>
+                      <button type="button" class="btn btn-block btn-success"><i class="fa fa-dashboard"></i> Dashboard</button>
+                  </td>
                                           
                 </tr>
                 <?php
@@ -170,6 +176,7 @@
                   <th>Perído Até</th>
                   <th>Carga Via</th>
                   <th>Status</th>
+                  <th>Editar</th>
                   <th>Opções</th>
                 </tr>
                 </tfoot>

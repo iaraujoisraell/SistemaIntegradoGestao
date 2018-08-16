@@ -42,7 +42,59 @@ class AudCon extends MY_Controller
        $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
-    public function processamentos() {
+    public function edit_analise($id)
+    {
+        $this->sma->checkPermissions(false, true);
+
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('cliente', lang("Cliente"), 'required');
+         $this->form_validation->set_rules('periodo_de', lang("Período de"), 'required');
+         $this->form_validation->set_rules('periodo_ate', lang("Período até"), 'required');
+         
+        if ($this->form_validation->run('companies/add') == true) {
+           
+            
+           /*
+            * CADASTRA O CLIENTE
+            */
+         $regras = $this->input->post('regras');
+         
+            $data = array(
+                'cliente' => $this->input->post('cliente'),
+                'carga' => $this->input->post('carga'),
+                'periodo_de' => $this->input->post('periodo_de'),
+                'periodo_ate' => $this->input->post('periodo_ate'),
+                'tabela' => $this->input->post('tabela'),
+                'status' => 1
+            );
+           $id_analise = $this->input->post('id');
+           
+           //print_r($regras); exit;
+           
+           
+            $this->AudCon_model->updateAnalise($id_analise, $data, $regras);
+            $this->session->set_flashdata('message', lang("Análise cadastrada com sucesso!"));
+            
+            redirect('AudCon');
+          
+        }else  {
+           
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         $this->data['ativo'] = 'cliente';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'analise';
+         $this->data['id'] = $id;
+         $pagina = 'audcon/paginas/analises/edit_analise';
+        
+       $this->page_construct_novo($pagina, $meta, $this->data);
+        }
+
+     
+    }
+    
+    public function processamentos($id) {
        
         
         if ($this->Settings->version == '2.3') {
@@ -52,14 +104,77 @@ class AudCon extends MY_Controller
          $this->sma->checkPermissions();
          $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             
-         $this->data['ativo'] = 'cliente';
+         $this->data['ativo'] = 'analise';
          $this->data['layout'] ='';
-         $this->data['menu'] = 'cadastros';
+         $this->data['menu'] = 'analise';
+       $this->data['id'] = $id;
        
          $pagina = 'audcon/paginas/processamentos';
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
+    public function resultado_processamentos($id) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         $this->data['ativo'] = 'analise';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'analise';
+         $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/resultado_analises';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+     function add_novo_processamento()
+    {
+        $this->sma->checkPermissions(false, true);
+
+        //$this->form_validation->set_rules('email', lang("email_address"), 'is_unique[companies.email]');
+         $this->form_validation->set_rules('cliente', lang("Cliente"), 'required');
+         $this->form_validation->set_rules('periodo_de', lang("Período de"), 'required');
+         $this->form_validation->set_rules('periodo_ate', lang("Período até"), 'required');
+         
+         $regras = $this->input->post('regras');
+        
+         print_r($regras); exit;
+        if ($this->form_validation->run('companies/add') == true) {
+           
+           /*
+            * CADASTRA O CLIENTE
+            */
+         
+            $data = array(
+                'cliente' => $this->input->post('cliente'),
+                'dt_solicitacao' => date('Y-m-d'),
+                'carga' => $this->input->post('carga'),
+                'periodo_de' => $this->input->post('periodo_de'),
+                'periodo_ate' => $this->input->post('periodo_ate'),
+                'status' => 0
+                
+              
+            );
+           
+           
+          //  $this->AudCon_model->addAnalise($data);
+            $this->session->set_flashdata('message', lang("Análise cadastrada com sucesso!"));
+            
+            redirect('AudCon');
+          
+        }else  {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('AudCon');
+        }
+
+     
+    }
      
      function add_analise()
     {

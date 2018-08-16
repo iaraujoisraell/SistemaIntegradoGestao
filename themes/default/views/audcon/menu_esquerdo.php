@@ -53,7 +53,7 @@
             
           </a>
         </li>
-        <li <?php if($menu == "analise"){ ?> class="active" <?php } ?>>
+        <li <?php if($menu == "tuss"){ ?> class="active" <?php } ?>>
           <a href="<?= site_url('AudCon/modulo4'); ?>">
             <i class="fa fa-th"></i> <span>Procedimentos TUSS</span>
             

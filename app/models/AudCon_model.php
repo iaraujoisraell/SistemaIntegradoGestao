@@ -89,9 +89,9 @@ class AudCon_model extends CI_Model
         $this->db->select('risk_modulos_sessao.id as id_regra, risk_modulos.modulo as id_mod, risk_modulos.descricao_resumida as modulo, risk_modulos_sessao.sessao as sessao, risk_modulos_sessao.descricao as regra, risk_modulos_sessao.observacao as observacao ')
         ->join('risk_modulos', 'risk_modulos.id=risk_modulos_sessao.modulo', 'left');
         if($modulo){
-            $q = $this->db->get_where('risk_modulos_sessao', array('modulo' => $modulo));
+            $q = $this->db->get_where('risk_modulos_sessao', array('modulo' => $modulo, 'status' => 1));
         }else{
-            $q = $this->db->get('risk_modulos_sessao');
+            $q = $this->db->get_where('risk_modulos_sessao', array('status' => 1));
         }
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -106,6 +106,32 @@ class AudCon_model extends CI_Model
         
         // $this->db->select('count(id) as quantidade');
         $q = $this->db->get_where('risk_modulos_sessao', array('id' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
+         public function getRegrasBySessao($id)
+    {
+        
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('risk_modulos_sessao', array('sessao' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
+       public function getDadosClienteById($tabela,$id)
+    {
+        
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where($tabela, array('id' => $id), 1);
      
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -318,6 +344,18 @@ class AudCon_model extends CI_Model
         }
     }
     
+       public function getAnaliseById($id)
+    {
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('risk_analises', array('id' => $id), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
     public function addAnalise($data = array())
     {
        
@@ -329,13 +367,216 @@ class AudCon_model extends CI_Model
         return false;
     }
     
-    /*
-     *  public function getCustomerSales($id)
+    public function addLogInconsistencia($data = array())
     {
-        $this->db->where('customer_id', $id)->from('sales');
-        return $this->db->count_all_results();
+       
+        if ($this->db->insert('risk_log_inconsistencia', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
     }
+    
+    
+      public function addProcessamentoAnalise($data = array())
+    {
+       
+        if ($this->db->insert('risk_processo_analise', $data)) {
+            $cid = $this->db->insert_id();
+            return $cid;
+        }
+
+        return false;
+    }
+    
+     public function updateProcessamentoAnalise($id, $data  = array())
+    {  
+       
+        if ($this->db->update('risk_processo_analise', $data, array('id' => $id))) {
+             
+         return true;
+        }
+        return false;
+    }
+    
+     public function updateAnalise($id, $data  = array(), $data_regras  = array())
+    {  
+       
+        if ($this->db->update('risk_analises', $data, array('id' => $id))) {
+          
+            $this->db->delete('risk_analise_regras', array('id_analise' => $id));
+            
+              foreach ($data_regras as $item) {
+                        $data_regra_analise = array('id_analise' => $id,
+                            'id_regra' => $item);      
+                        
+                        $this->db->insert('risk_analise_regras', $data_regra_analise);
+                 }
+            
+         return true;
+        }
+        return false;
+    }
+    
+    
+       public function getAnaliseRegraByAnalise($id)
+    {
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('risk_analise_regras', array('id_analise' => $id));
+     
+         if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+         
+    }
+    
+     public function getProcessosAnalisesById($id)
+    {
+         $q = $this->db->get_where('risk_processo_analise', array('id' => $id));
+         if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+    }
+    
+     public function getProcessosAnalises($analise)
+    {
+        $this->db->select('*')
+        ->order_by('dt_processo', 'desc');
+         $q = $this->db->get_where('risk_processo_analise', array('analise' => $analise));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+     public function getRegrasProcessosAnalises($analise)
+    {
+        $this->db->select('distinct(id_regra) as regras');
+        //->order_by('dt_processo', 'desc');
+         $q = $this->db->get_where('risk_log_inconsistencia', array('processo_analise' => $analise));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+     public function getInconsistenciasProcessosAnalises($analise)
+    {
+        //$this->db->select('distinct(id_regra) as regras');
+        //->order_by('dt_processo', 'desc');
+         $q = $this->db->get_where('risk_log_inconsistencia', array('processo_analise' => $analise));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
+     public function getQuantidadeDistintasGuiasAnalises($tabela)
+    {
+        $this->db->select('count(distinct(guia)) as guia');
+        //->order_by('dt_processo', 'desc');
+        $q = $this->db->get($tabela);
+        if ($q->num_rows() > 0) {
+           return $q->row();
+        }
+    }
+    
+    
+    public function getTabelaClienteByRegra($tabela)
+    {
+         $this->db->select('id, guia, carater_atendimento,cirurgico, codigo_servico, quantidade, valor_procedimento,competencia');
+        $q = $this->db->get($tabela);
+     
+         if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+         
+    }
+    
+    /*
+     * RETORNA O NÚMERO DE REGISTRO DA TABELA DO CLIENTE
      */
+    
+     public function getMaxRegistrosCliente($tabela)
+    {
+       
+         $this->db->select('count(id) as quantidade');
+        $q = $this->db->get($tabela, 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+     }
+     
+     /*
+     * RETORNA O NÚMERO DE INCONSISTENCIAS ENCONTRADA EM UM PROCESSAMENTO
+     */
+    
+     public function getInconsistenciasProcessoAnalise($id)
+    {
+       
+         $this->db->select('count(id) as quantidade');
+       $q = $this->db->get_where('risk_log_inconsistencia', array('processo_analise' => $id));
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+     }
+     
+     
+    
+     
+     
+     /*
+     * RETORNA O NÚMERO DE REGISTRO DA TABELA DO CLIENTE
+     */
+    
+     public function getRegitroTabelaTuss($id)
+    {
+       
+        // $this->db->select('count(id) as quantidade');
+         $q = $this->db->get_where('risk_modulo_4_6', array('id_termo' => $id));
+     
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+     }
+    
+    
+       public function getProcessamentoRegraByAnalise($id)
+    {
+         $this->db->select('risk_analise_regras.id_analise as id_analise, risk_modulos_sessao.id as id, risk_modulos_sessao.sessao as regra, descricao')
+         ->join('risk_modulos_sessao', 'risk_modulos_sessao.id=risk_analise_regras.id_regra', 'left');
+        $q = $this->db->get_where('risk_analise_regras', array('id_analise' => $id));
+     
+         if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return FALSE;
+         
+    }
     
      public function getContEstrutura()
     {
