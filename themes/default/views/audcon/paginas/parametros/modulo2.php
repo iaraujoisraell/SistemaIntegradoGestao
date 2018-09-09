@@ -2,8 +2,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Coberturas Contratuais
-        <small>Vs Plano Regulamentado</small>
+        Cobertura Resolução Normativa nº 428/2017      
+        <small>Vs TUSS</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>

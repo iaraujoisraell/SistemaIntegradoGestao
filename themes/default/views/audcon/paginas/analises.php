@@ -1,4 +1,4 @@
-<body class="hold-transition skin-blue layout-boxed <?php if($layout){ echo $layout; }?>  sidebar-mini">
+<body class="hold-transition ">
     <div class="wrapper">
 
 <div class="content-wrapper">
@@ -35,71 +35,7 @@
                         </div>
                     <?php } ?>
       <!-- Small boxes (Stat box) -->
-      <div class="row">
-          
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>150</h3>
-
-              <p>Análises Concluídas</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-          
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>44</h3>
-
-              <p>Análises em Andamento</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>  
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-              <p>Bounce Rate</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3>65</h3>
-
-              <p>Clientes</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
+      
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
@@ -149,14 +85,14 @@
                   <td><?php echo $cli->periodo_de; ?></td>
                   <td><?php echo $cli->periodo_ate; ?></td>
                   <td><?php echo $cli->carga; ?></td>
-                  <td><?php if($status == 0){ ?> ABERTO  <?php }else if($status == 1){ ?> EM ANÁLISE <?php }else if($status == 2){ ?> CONCLUÍDO  <?php }  ?></td>
+                  <td style="background-color: <?php if($status == 0){ ?> gray <?php }else if($status == 1){ ?> orange <?php }else if($status == 2){ ?> green  <?php }  ?>"><?php if($status == 0){ ?> ABERTO  <?php }else if($status == 1){ ?> EM ANÁLISE <?php }else if($status == 2){ ?> CONCLUÍDO  <?php }  ?></td>
                   <td>
                       <a href="audcon/edit_analise/<?php echo $cli->id; ?>" ><i class="fa fa-edit"></i> Editar</a>
                                           
                 </td>
                   <td>
                       <a href="audcon/processamentos/<?php echo $cli->id; ?>" class="btn btn-block btn-danger"><i class="fa fa-gears"></i> Análises</a>
-                      <button type="button" class="btn btn-block btn-success"><i class="fa fa-dashboard"></i> Dashboard</button>
+                    
                   </td>
                                           
                 </tr>

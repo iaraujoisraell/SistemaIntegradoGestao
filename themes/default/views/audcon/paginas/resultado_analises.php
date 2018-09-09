@@ -1,4 +1,4 @@
-<body class="hold-transition skin-blue layout-boxed <?php if($layout){ echo $layout; }?>  sidebar-mini">
+<body class="hold-transition sidebar-collapse  sidebar-mini">
     <div class="wrapper">
 
 <div class="content-wrapper">
@@ -56,82 +56,7 @@
                         </div>
                     <?php } ?>
       <!-- Small boxes (Stat box) -->
-      <div class="row">
-          
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3><?php echo $processos_analises->num_registros; ?></h3>
-
-              <p>Registros Analisadas</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-          <?php
-           $Guias_cliente = $this->AudCon_model->getQuantidadeDistintasGuiasAnalises($analises->tabela);
-           ?>
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3><?php echo $Guias_cliente->guia; ?><sup style="font-size: 20px"></sup></h3>
-
-              <p>Número de Guias</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>  
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3><?php echo $processos_analises->num_inconsistencias; ?></h3>
-
-              <p>Inconsistências Encontradas</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>  
-        <!-- ./col -->
-        
-        <!-- ./col -->
-        <?php
-            $cont = 1;                            
-           $processos = $this->AudCon_model->getInconsistenciasProcessosAnalises($id);
-           $soma_valor_total = 0;
-            foreach ($processos as $reg) {
-                $valor_total = ($reg->valor_inconsistencia * $reg->quantidade);
-                $soma_valor_total += $valor_total;
-            }
-        ?>   
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3><?php echo $soma_valor_total; ?></h3>
-
-              <p>Valor Total Indevido</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
+      
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
@@ -140,7 +65,7 @@
         <section class="col-lg-12 connectedSortable">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Inconsistências </h3>
+              <h3 class="box-title">Inconsistências  </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -156,14 +81,15 @@
                   <th>Valor Encontrado</th>
                   <th>Quantidade Procedimento</th>
                   <th>Valor do Procedimento</th>
-                  <th>Valor Total</th>
+                 
                 </tr>
                 </thead>
                 <tbody>
                 
                 <?php
                     $cont = 1;                            
-                   $processos = $this->AudCon_model->getInconsistenciasProcessosAnalises($id);
+                   $processos = $this->AudCon_model->getAllInconsistenciasProcessosAnalises($id, $analises->tabela_log);
+                  // print_r($processos);
                     foreach ($processos as $reg) {
                         
                         /*
@@ -195,7 +121,7 @@
                   <td><?php echo $reg->valor_cliente; ?></td>
                   <td><?php echo $reg->quantidade; ?></td>
                   <td><?php echo $reg->valor_inconsistencia; ?></td>    
-                  <td><?php echo $valor_total; ?></td>
+                  
                 </tr>
                 <?php
                 }
@@ -215,7 +141,7 @@
                   <th>Valor Encontrado</th>
                   <th>Quantidade</th>
                   <th>Valor do Procedimento</th>
-                  <th>Valor Total</th>
+                
                 </tr>
                 </tfoot>
               </table>

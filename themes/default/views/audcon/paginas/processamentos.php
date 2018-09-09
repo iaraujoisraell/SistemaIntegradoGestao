@@ -29,7 +29,7 @@
     padding-left: 27px;
 }
 </style> 
-<body class="hold-transition skin-blue layout-boxed <?php if($layout){ echo $layout; }?>  sidebar-mini">
+<body class="hold-transition sidebar-collapse sidebar-mini">
     <div class="wrapper">
 
 <div class="content-wrapper">
@@ -87,6 +87,9 @@
               
           </div>
       <Br><br>
+      
+       <?php if($status == 1){ ?> 
+         
       <div class="row">
           <?php $attrib = array('data-toggle' => 'validator', 'role' => 'form', 'id' => 'add-customer-form');
                         echo form_open_multipart("ProcessaAnalise/add_novo_processamento", $attrib); ?>
@@ -142,6 +145,12 @@
                  
           </div>
       
+      
+      <?php }else if($status == 2){ ?> 
+      
+      <h3>ANÁLISES CONCLUÍDA</h3>
+  <?php }  ?>
+      
         <div class="row">
         
         <section class="col-lg-12 connectedSortable">
@@ -151,14 +160,14 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
+              <table  class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>ID</th>
                   <th>Data</th>
                   <th>No.Reg. Analisados</th>
                   <th>Qtde Inconsistências</th>
-                  <th>Regras Analisadas</th>
+                  <th>Regras com Inconsistências</th>
                   <th>Opções</th>
                 </tr>
                 </thead>
@@ -171,12 +180,12 @@
                 ?>   
                 
                 <tr>
-                  <td><?php echo $cont++; ?></td>  
+                  <td><?php echo $pro->id; ?></td>  
                   <td><?php echo $this->sma->hrld($pro->dt_processo); ?></td>
                   <td><?php echo $pro->num_registros; ?></td>
                   <td><?php echo $pro->num_inconsistencias; ?></td>
                   <td>
-                      <?php $regras_processos = $this->AudCon_model->getRegrasProcessosAnalises($pro->id); 
+                      <?php $regras_processos = $this->AudCon_model->getRegrasProcessosAnalises($pro->id, $analises->tabela_log); 
                       foreach ($regras_processos as $regra) {
                       ?>
                       <table>
@@ -187,7 +196,7 @@
                       <?php } ?>
                   </td>
                   
-                  <td> <a class="btn btn-block btn-success" href="../resultado_processamentos/<?php echo $pro->id; ?>" > VER</a> </td>
+                  <td> <a class="btn btn-block btn-success" href="../dashboard_resultado/<?php echo $pro->id; ?>" > Resultado</a> </td>
                                           
                 </tr>
                 <?php
@@ -203,7 +212,7 @@
                   <th>Data</th>
                   <th>No.Reg. Analisados</th>
                   <th>Qtde Inconsistências</th>
-                  <th>Regras Analisadas</th>
+                  <th>Regras com Inconsistências</th>
                   <th>Opções</th>
                 </tr>
                 </tfoot>

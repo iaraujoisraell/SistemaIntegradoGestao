@@ -65,7 +65,12 @@
 
 $active_group = 'default';
 $query_builder = TRUE;
-
+/*
+ * 'hostname' => 'sig32.mysql.uhserver.com',
+	'username' => 'iaraujo',
+	'password' => 'rando.2018',
+	'database' => 'sig32',
+ */
 $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',

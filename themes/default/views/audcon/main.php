@@ -20,7 +20,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <?php  $this->load->view($this->theme . 'audcon/head'); ?>
     
     
-<body class="hold-transition skin-blue layout-boxed <?php if($layout){ echo $layout; }?>  sidebar-mini">
+<body >
 <div class="wrapper">
 
   <?php  $this->load->view($this->theme . 'audcon/topo'); ?>

@@ -113,6 +113,25 @@ class AudCon extends MY_Controller
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     
+    public function dashboard_resultado($id) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         $this->data['ativo'] = 'analise';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'analise';
+         $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/dashboard_resultados';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
     public function resultado_processamentos($id) {
        
         

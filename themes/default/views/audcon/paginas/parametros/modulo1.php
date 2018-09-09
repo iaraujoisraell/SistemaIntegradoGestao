@@ -65,8 +65,8 @@
                   <th>Cod. CBHPM 3a.</th>
                   <th>Cod. LPM 1999.</th>
                   <th>Cod. LPM 1996</th>
-                  <th>Cod. AMP 92</th>
-                  <th>Cod. AMP 90</th>
+                  <th>Cod. AMB 92</th>
+                  <th>Cod. AMB 90</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -107,8 +107,8 @@
                   <th>Cod. CBHPM 3a.</th>
                   <th>Cod. LPM 1999.</th>
                   <th>Cod. LPM 1996</th>
-                  <th>Cod. AMP 92</th>
-                  <th>Cod. AMP 90</th>
+                  <th>Cod. AMB 92</th>
+                  <th>Cod. AMB 90</th>
                 </tr>
                 </tfoot>
               </table>
