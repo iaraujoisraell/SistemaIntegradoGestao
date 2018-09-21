@@ -588,26 +588,12 @@ $(document).on('change', "[name='perfil_usario']", function(){
                             ?>
                            
                              <li class="mm_acoes mm_welcome">
-                                <a class="dropmenu" href="#">
+                                <a  href="<?= site_url('Audcon_cli'); ?>">
                                     <i class="fa fa-list"></i>
-                                    <span class="text"> <?= lang('Minhas Ações'); ?> </span> 
+                                    <span class="text"> <?= lang('HOME'); ?> </span> 
                                     <span class="chevron closed"></span>
                                 </a>
-                                <ul>
-                                    <li id="welcome_index">
-                                        <a class="submenu" href="<?= site_url('welcome'); ?>">
-                                            <i class="fa fa-exclamation"></i>
-                                            <span class="text"> <?= lang('Ações Pendentes'); ?></span>
-                                        </a>
-                                    </li>
-                                    <li id="welcome_acoesconcluidas">
-                                        <a class="submenu" href="<?= site_url('welcome/acoesConcluidas'); ?>">
-                                            <i class="fa fa-check"></i>
-                                            <span class="text"> <?= lang('Ações Concluídas'); ?></span>
-                                        </a>
-                                    </li>
-                                    
-                                </ul>
+                                
                             </li>
                         
                    <?php } ?>

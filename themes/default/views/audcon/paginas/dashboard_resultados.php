@@ -1,15 +1,11 @@
+  <link rel="stylesheet" href="<?= $assets ?>bi/bower_components/morris.js/morris.css">
+ 
+
 <body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
 <div class="wrapper">
 
-<link rel="stylesheet" href="<?= $assets ?>bi/bower_components/morris.js/morris.css">
-
- 
-
-
   <!-- Left side column. contains the logo and sidebar -->
- <?php  $processos_analises = $this->audcon_model->getProcessosAnalisesById($id); 
-
- ?>
+ <?php  $processos_analises = $this->AudCon_model->getProcessosAnalisesById($id); ?>
   
 <?php $analises = $this->AudCon_model->getAnaliseById($processos_analises->analise); ?>
   
@@ -162,11 +158,7 @@
             <div class="box-header with-border">
               <h3 class="box-title">Valor pago Vs Valor discrepante por período</h3>
 
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-              
-                </div>
+            
             </div>
              <div class="row">
                 <div class="col-md-12">
@@ -176,7 +168,7 @@
 
                   <div class="chart">
                     <!-- Sales Chart Canvas -->
-                    <canvas id="salesChart" style="height: 180px;"></canvas>
+                    <canvas id="salesChart2" style="height: 180px;"></canvas>
                   </div>
                   <!-- /.chart-responsive -->
                 </div>
@@ -210,7 +202,7 @@
                     <th>Código</th>
                     <th>Prestador</th>
                     <th>Inconsistências</th>
-                    <th>Qtde/Regra</th>
+                   
                     <th>Valor</th>
                     <th>Detalhes</th>
                   </tr>
@@ -244,9 +236,7 @@
                     <td><a href="pages/examples/invoice.html"><?php echo $prestadore_analise->id_prestador ?></a></td>
                     <td><?php echo $prestadore_analise->prestador ?></td>
                     <td><?php echo $prestadore_analise->inconsistencias ?></td>
-                    <td>
-                      <div class="sparkbar" data-color="<?php echo $cor; ?>" data-height="20">190,280,490,170,261,383,63</div>
-                    </td>
+                    
                     <td><span class="label label-danger">R$ <?php echo number_format($prestadore_analise->valor_discrepante,2,",",".") ?> </span></td>
                     <td><a class="btn btn-success">ABRIR</a></td>
                   </tr>
@@ -343,12 +333,10 @@
 <!-- page script -->
 <script>
     
-    
-    
   $(function () {
     "use strict";
 // Get context with jQuery - using jQuery's .get() method.
-  var salesChartCanvas = $('#salesChart').get(0).getContext('2d');
+  var salesChartCanvas = $('#salesChart2').get(0).getContext('2d');
   // This will get the first returned node in the jQuery collection.
   var salesChart       = new Chart(salesChartCanvas);
 
@@ -401,7 +389,7 @@
         label               : 'Discrepante',
         fillColor           : 'rgba(60,141,188,0.9)',
         strokeColor         : 'rgba(60,141,188,0.8)',
-        pointColor          : 'red',
+        pointColor          : 'blue',
         pointStrokeColor    : 'rgba(60,141,188,1)',
         pointHighlightFill  : '#fff',
         pointHighlightStroke: 'rgba(60,141,188,1)',
@@ -457,7 +445,6 @@
     // Boolean - Whether to fill the dataset with a color
     datasetFill             : true,
     // String - A legend template
-    legendTemplate          : '<ul class=\'<%=name.toLowerCase()%>-legend\'><% for (var i=0; i<datasets.length; i++){%><li><span style=\'background-color:<%=datasets[i].lineColor%>\'></span><%=datasets[i].label%></li><%}%></ul>',
     // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
     maintainAspectRatio     : true,
     // Boolean - whether to make the chart responsive to window resizing
@@ -546,8 +533,7 @@
   });
 </script>
 <!-- jQuery 3 -->
-<script src="<?= $assets ?>bi/bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
+<script src="<?= $assets ?>bi/bower_components/jquery/dist/jquery.min.js"></script><!-- Bootstrap 3.3.7 -->
 <!-- Sparkline -->
 <!-- jvectormap  -->
 <script src="<?= $assets ?>bi/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>

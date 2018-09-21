@@ -156,7 +156,7 @@ class CI_Input {
 		// CSRF Protection check
 		if ($this->_enable_csrf === TRUE && ! is_cli())
 		{
-			$this->security->csrf_verify();
+			//$this->security->csrf_verify();
 		}
 
 		log_message('info', 'Input Class Initialized');

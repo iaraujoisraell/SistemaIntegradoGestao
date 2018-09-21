@@ -39,7 +39,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MENU</li>
         <li <?php if($menu == "analise"){ ?> class="active" <?php } ?>>
-          <a href="<?= site_url('AudCon'); ?>">
+          <a href="<?= site_url('Provin'); ?>">
             <i class="fa fa-th"></i> <span>Análises</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green">new</small>
@@ -48,14 +48,14 @@
         </li>
         
        <li <?php if($menu == "regras"){ ?> class="active" <?php } ?>>
-          <a href="<?= site_url('AudCon/regras'); ?>">
+          <a href="<?= site_url('Provin/regras'); ?>">
             <i class="fa fa-cog"></i> <span>Regras e Condições</span>
             
           </a>
         </li>
         <li <?php if($menu == "tuss"){ ?> class="active" <?php } ?>>
-          <a href="<?= site_url('AudCon/modulo4'); ?>">
-            <i class="fa fa-th"></i> <span>Procedimentos TUSS</span>
+          <a href="<?= site_url('Provin/modulo4'); ?>">
+            <i class="fa fa-th"></i> <span>Banco de Regras</span>
             
           </a>
         </li>
@@ -68,9 +68,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li <?php if($ativo == "modulo1"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo1'); ?>"><i class="fa fa-reorder"></i> Tabelas</a></li>
-            <li <?php if($ativo == "modulo2"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo2'); ?>"><i class="fa fa-signal"></i> Coberturas X Planos</a></li>
-            <li <?php if($ativo == "modulo3"){ ?> class="active" <?php } ?>><a href="<?= site_url('AudCon/modulo3'); ?>"><i class="fa  fa-gear"></i> SIP da ANS</a></li>
+            <li <?php if($ativo == "modulo1"){ ?> class="active" <?php } ?>><a href="<?= site_url('Provin/modulo1'); ?>"><i class="fa fa-reorder"></i> Tabelas</a></li>
+            <li <?php if($ativo == "modulo2"){ ?> class="active" <?php } ?>><a href="<?= site_url('Provin/modulo2'); ?>"><i class="fa fa-signal"></i> Coberturas X Planos</a></li>
+            <li <?php if($ativo == "modulo3"){ ?> class="active" <?php } ?>><a href="<?= site_url('Provin/modulo3'); ?>"><i class="fa  fa-gear"></i> SIP da ANS</a></li>
            
           </ul>
         </li>
@@ -84,9 +84,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li <?php if($ativo == "cliente"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/clientes'); ?>"><i class="fa fa-users"></i> Clientes</a></li>
-            <li <?php if($ativo == "estrutura"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/estrutura_cliente'); ?>"><i class="fa fa-cog"></i> Estrutura</a></li>
-              <li <?php if($ativo == "valores"){ ?> class="active" <?php } ?>> <a href="<?= site_url('AudCon/valoresRegras'); ?>"><i class="fa fa-cog"></i> Tipo Valores</a></li>
+            <li <?php if($ativo == "cliente"){ ?> class="active" <?php } ?>> <a href="<?= site_url('Provin/clientes'); ?>"><i class="fa fa-users"></i> Clientes</a></li>
+            <li <?php if($ativo == "estrutura"){ ?> class="active" <?php } ?>> <a href="<?= site_url('Provin/estrutura_cliente'); ?>"><i class="fa fa-cog"></i> Estrutura</a></li>
+              <li <?php if($ativo == "valores"){ ?> class="active" <?php } ?>> <a href="<?= site_url('Provin/valoresRegras'); ?>"><i class="fa fa-cog"></i> Tipo Valores</a></li>
         
           </ul>
         </li>

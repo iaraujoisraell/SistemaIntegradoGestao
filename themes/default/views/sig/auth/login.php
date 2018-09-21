@@ -2,14 +2,17 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Escritório de Projetos - UNIMED MANAUS</title>
+    <title><?= $Settings->site_name ?></title>
    
     <meta name="viewport" content="width=device-width, initial-scale=1">
- 
+    
+    
+    
     <link href="<?= $assets ?>styles/theme.css" rel="stylesheet"/>
     <link href="<?= $assets ?>styles/style.css" rel="stylesheet"/>
     <link href="<?= $assets ?>styles/helpers/login.css" rel="stylesheet"/>
     <script type="text/javascript" src="<?= $assets ?>js/jquery-2.0.3.min.js"></script>
+    
     <!--[if lt IE 9]>
     <script src="<?= $assets ?>js/respond.min.js"></script>
     <![endif]-->
@@ -22,10 +25,10 @@
     
     #logoempresa{
 
-                width: 320px;
-                height: 120px;
+                width: 250px;
+                height: 80px;
                 margin: auto;
-                background-image:url(<?= $assets ?>login/lib/images/sig.png);
+                background-image:url(<?= $assets ?>login/lib/images/risk.jpeg);
                 background-repeat:no-repeat; 
                 background-size:100% 100%;
                 -webkit-background-size: 100% 100%;
@@ -53,7 +56,7 @@
     <br>
     <div id="login" >
 
-        <div class=" container" >
+          <div class=" container" >
 
             <div class="login-form-div" >
                 <div class="login-content" >
@@ -75,16 +78,16 @@
                             <ul class="list-group"><?= $message; ?></ul>
                         </div>
                     <?php } ?>
-                    <?php echo form_open("Auth/login_sig", 'class="login" data-toggle="validator"'); ?>
+                    <?php echo form_open("auth/login", 'class="login" data-toggle="validator"'); ?>
                     <div class="div-title">
-                       <center>  <font style="color: #000000; margin-top: 0px;"> <h3>Sistema Integrado de Gestão</h3> </font></center>
+                       <center>  <font style="color:#005f8d ; margin-top: 0px;"> <h1>PROVIN</h1> </font>
+                       <P>Procedimento de Verificação de Inconsistências e Pagamentos Discrepantes</P></center>
                     </div>
-               
                     <div class="textbox-wrap form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user"></i></span>
                             <input type="text" required="required" class="form-control" name="identity"
-                                   placeholder="<?= lang('Login') ?>"/>
+                                   placeholder="<?= lang('username') ?>"/>
                         </div>
                     </div>
                     <div class="textbox-wrap form-group">
@@ -187,89 +190,22 @@
 
         </div>
     </div>
-    <?php if ($Settings->allow_reg) { ?>
-        <div id="register">
-            <div class=" container">
-
-                <div class="registration-form-div">
-                    <form>
-                        <div class="div-title reg-header">
-                            <h3 class="text-primary"><?= lang('register_account_heading') ?></h3>
-
-                        </div>
-                        <div class="clearfix">
-                            <div class="col-sm-6 registration-left-div">
-                                <div class="reg-content">
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-user"></i></span>
-                                            <input type="text" class="form-control "
-                                                   placeholder="<?= lang('first_name') ?>" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-user"></i></span>
-                                            <input type="text" class="form-control "
-                                                   placeholder="<?= lang('last_name') ?>" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-envelope"></i></span>
-                                            <input type="email" class="form-control "
-                                                   placeholder="<?= lang('email_address') ?>" required="required"/>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div class="col-sm-6 registration-right-div">
-                                <div class="reg-content">
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-user"></i></span>
-                                            <input type="text" class="form-control "
-                                                   placeholder="<?= lang('username') ?>" required="required"/>
-                                        </div>
-                                    </div>
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-key"></i></span>
-                                            <input type="password" class="form-control " placeholder="<?= lang('pw') ?>"
-                                                   required="required"/>
-                                        </div>
-                                    </div>
-                                    <div class="textbox-wrap form-group">
-                                        <div class="input-group">
-                                            <span class="input-group-addon "><i class="fa fa-key"></i></span>
-                                            <input type="password" class="form-control "
-                                                   placeholder="<?= lang('confirm_password') ?>" required="required"/>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="registration-form-action clearfix">
-                            <a href="#login" class="btn btn-success pull-left login_link">
-                                <i class="fa fa-chevron-left"></i> <?= lang('back') ?>
-                            </a>
-                            <button type="submit" class="btn btn-primary pull-right"><?= lang('register_now') ?> <i
-                                    class="fa fa-user"></i></button>
-
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    <?php }
+   
     
-     
-    ?>
+    <div class="text-center">
+        
+    <footer class="main-footer" style="position: fixed; bottom: 0px; right: 0px; width: 100%; ">
+        
+    <div class="pull-right hidden-xs">
+      <b>Version</b> <?= $Settings->version ?>
+    </div>
+    <strong>Copyright &copy; 2018 <a href="#"> sig </strong> All rights
+    reserved. 
+    
+  </footer>
+        
+    </div>
+    
 </div>
 
 <script src="<?= $assets ?>js/jquery.js"></script>
@@ -286,4 +222,6 @@
     });
 </script>
 </body>
+<!-- AdminLTE App -->
+<script src="<?= $assets ?>bi/dist/js/adminlte.min.js"></script>
 </html>

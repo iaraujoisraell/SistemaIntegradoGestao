@@ -103,6 +103,16 @@ class Sig extends MY_Controller
        
     }
     
+    public function menu_cliente() {
+          
+        //$this->sma->checkPermissions();
+        
+        $pagina = 'audcon/paginas_cliente/analises';
+        
+       $this->page_construct_cliente($pagina, $meta, $this->data);
+       
+    }
+    
     public function gerenciarSaude() {
           
         //$this->sma->checkPermissions();

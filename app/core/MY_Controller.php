@@ -142,4 +142,35 @@ class MY_Controller extends CI_Controller {
        
     }
 
+    
+     function page_construct_cliente($page, $meta = array(), $data = array()) {
+        $meta['message'] = isset($data['message']) ? $data['message'] : $this->session->flashdata('message');
+        $meta['error'] = isset($data['error']) ? $data['error'] : $this->session->flashdata('error');
+        $meta['warning'] = isset($data['warning']) ? $data['warning'] : $this->session->flashdata('warning');
+        $meta['info'] = $this->site->getNotifications();
+        $meta['events'] = $this->site->getUpcomingEvents();
+        $meta['ip_address'] = $this->input->ip_address();
+        $meta['Owner'] = $data['Owner'];
+        $meta['Admin'] = $data['Admin'];
+        $meta['Supplier'] = $data['Supplier'];
+        $meta['Customer'] = $data['Customer'];
+        $meta['Settings'] = $data['Settings'];
+        $meta['dateFormats'] = $data['dateFormats'];
+        $meta['assets'] = $data['assets'];
+        $meta['GP'] = $data['GP'];
+        $meta['qty_alert_num'] = $this->site->get_total_qty_alerts();
+        $meta['exp_alert_num'] = $this->site->get_expiring_qty_alerts();
+        
+        $meta['ativo'] = $data['ativo'];
+        $meta['layout'] = $data['layout'];
+        $meta['menu'] = $data['menu'];
+        $meta['limite'] = $data['limite'];
+        $meta['pagina'] = $page;
+        $meta['id_cliente'] = $data['id'];
+        $meta['id_regra'] = $data['id'];
+        $meta['id'] = $data['id'];
+        
+          $this->load->view($this->theme. 'audcon/main_cliente', $meta);
+       
+    }
 }

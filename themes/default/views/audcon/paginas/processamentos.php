@@ -31,7 +31,20 @@
 </style> 
 <body class="hold-transition sidebar-collapse sidebar-mini">
     <div class="wrapper">
+ <?php
+ 
+ function encrypt($str, $key)
+        {
+           
+            for ($return = $str, $x = 0, $y = 0; $x < strlen($return); $x++)
+            {
+                $return{$x} = chr(ord($return{$x}) ^ ord($key{$y}));
+                $y = ($y >= (strlen($key) - 1)) ? 0 : ++$y;
+            }
 
+            return $return;
+        }
+ ?>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -45,7 +58,7 @@
       </ol>
     </section>
     <div id="blanket"></div>
-                    <div id="aguarde">Aguarde...Processamento em Andamento</div>
+                    <div id="aguarde">Aguarde...O Processo para execução do processamento das regras está sendo criado.</div>
     <!-- Main content -->
     <section class="content">
          <?php if ($Settings->mmode) { ?>
@@ -70,8 +83,9 @@
       <br><br>
       <?php $analises = $this->AudCon_model->getAnaliseById($id); ?>
       <div class="box">
+          <div class="box box-danger ">
             <div class="box-header">
-              <h3 class="box-title">Dados Análise </h3>
+              <h3 class="box-title">Dados Análise  </h3>
             </div>
           <div class="box-body">
               <div class="col-lg-12">
@@ -86,7 +100,8 @@
               </div>
               
           </div>
-      <Br><br>
+              </div>
+      
       
        <?php if($status == 1){ ?> 
          
@@ -94,52 +109,64 @@
           <?php $attrib = array('data-toggle' => 'validator', 'role' => 'form', 'id' => 'add-customer-form');
                         echo form_open_multipart("ProcessaAnalise/add_novo_processamento", $attrib); ?>
                       <input type="hidden" name="id" value="<?php echo $id; ?>">
-                    <div class="col-lg-12">
-                      <div class="box box-primary">
-                    <div class="box-header">
-                      <i class="ion ion-clipboard"></i>
+                      <div class="col-lg-12">
+                          <div class="box box-primary collapsed-box">
+                              <div  class="box-header with-border">
+                              <h3 class="box-title">Regras para análise</h3>
 
-                      <h3 class="box-title">Selecione as regras que serão aplicadas nesta análise</h3>
-                    </div>
-                    <!-- /.box-header -->
-                    <div class="box-body">
+                              <div  class="box-tools pull-right">
+                                <button  type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                                </button>
+                              </div>
+                              <!-- /.box-tools -->
+                            </div>
+                              
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                              <div class="box-body">
                       <!-- See dist/js/pages/dashboard.js to activate the todoList plugin -->
                       <ul class="todo-list">
-                          <?php
-                          $regras_analise = $this->AudCon_model->getProcessamentoRegraByAnalise($id);
-                           // print_r($regras_analise);
-                             foreach ($regras_analise as $regAnalise) {
-                                $cgs_ra[$regAnalise->id_regra] = $regAnalise->id_regra;
-                            //}
-                          ?>
-                            <li>
-                          <!-- drag handle -->
-                          <span class="handle">
-                                <i class="fa fa-ellipsis-v"></i>
-                                <i class="fa fa-ellipsis-v"></i>
-                              </span>
-                          <!-- checkbox -->
-                          <input type="checkbox" checked="1" name="regras[]" value="<?php echo $regAnalise->id; ?>">
-                          <!-- todo text -->
-                          <span class="text"><?php echo $regAnalise->regra.' - '.$regAnalise->descricao; ?></span>
-                          <!-- Emphasis label -->
+                              <?php
+                              $regras_analise = $this->AudCon_model->getProcessamentoRegraByAnalise($id);
+                              // print_r($regras_analise);
+                              foreach ($regras_analise as $regAnalise) {
+                                  $cgs_ra[$regAnalise->id_regra] = $regAnalise->id_regra;
+                                  //}
+                                  ?>
+                                  <li>
+                                      <!-- drag handle -->
+                                      <span class="handle">
+                                          <i class="fa fa-ellipsis-v"></i>
+                                          <i class="fa fa-ellipsis-v"></i>
+                                      </span>
+                                      <!-- checkbox -->
+                                      <input type="checkbox" checked="1" name="regras[]" value="<?php echo $regAnalise->id; ?>">
+                                      <!-- todo text -->
+                                      <span class="text"><?php echo $regAnalise->regra . ' - ' . $regAnalise->descricao; ?></span>
+                                      <!-- Emphasis label -->
 
-                          <!-- General tools such as edit or delete-->
+                                      <!-- General tools such as edit or delete-->
 
-                        </li>
-                        <?php
-                        }
-                        ?>
+                                  </li>
+                                  <?php
+                              }
+                              ?>
 
-                      </ul>
+                          </ul>
                     </div>
-
-                  </div>
-                  </div>
-                   
-                    <div class="modal-footer">
+                                <div class="modal-footer">
                         <?php echo form_submit('add_customer', lang('PROCESSAR ANÁLISE'), 'class="btn btn-danger btn-lg" onclick="alertas();"'); ?>
                     </div>
+                            </div>
+                            
+                            <!-- /.box-body -->
+                          </div>
+                          <!-- /.box -->
+                        </div>
+                      
+                    
+                   
+                    
               
             
                  
@@ -177,6 +204,9 @@
                     $cont = 1;                            
                    $analises_processos = $this->AudCon_model->getProcessosAnalises($id);
                     foreach ($analises_processos as $pro) {
+                        
+                        
+                         $id_riptografado =  encrypt($pro->id,'ISRAEL');
                 ?>   
                 
                 <tr>
@@ -196,7 +226,7 @@
                       <?php } ?>
                   </td>
                   
-                  <td> <a class="btn btn-block btn-success" href="../dashboard_resultado/<?php echo $pro->id; ?>" > Resultado</a> </td>
+                  <td> <a class="btn btn-block btn-success" href="<?= site_url('Provin/processamentos_execucao/'.$pro->id); ?>" > Visualizar</a> </td>
                                           
                 </tr>
                 <?php

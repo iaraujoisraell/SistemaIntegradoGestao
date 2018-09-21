@@ -21,7 +21,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     
     
 <body >
-<div class="wrapper">
+
 
   <?php  $this->load->view($this->theme . 'audcon/topo'); ?>
   <!-- Left side column. contains the logo and sidebar -->
@@ -52,15 +52,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <?php echo  $this->load->view($this->theme . $pagina); ?>
   
   <!-- /.content-wrapper -->
-  <?php  $this->load->view($this->theme . 'audcon/footer_rodape'); ?>
+  <?php  //$this->load->view($this->theme . 'audcon/footer_rodape'); ?>
 
   <!-- Control Sidebar -->
- <?php  $this->load->view($this->theme . 'audcon/menu_direito'); ?>
+ <?php // $this->load->view($this->theme . 'audcon/menu_direito'); ?>
   <!-- /.control-sidebar -->
   <!-- Add the sidebar's background. This div must be placed
        immediately after the control sidebar -->
   <div class="control-sidebar-bg"></div>
-</div>
+
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->

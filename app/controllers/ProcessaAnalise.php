@@ -32,9 +32,7 @@ class ProcessaAnalise extends MY_Controller
     
      function add_novo_processamento()
     {
-        //ini_set("max_execution_time", 12000);
-         
-        $this->sma->checkPermissions(false, true);
+        $this->sma->checkPermissions();
 
          $regras = $this->input->post('regras');
          $analise = $this->input->post('id');
@@ -62,6 +60,51 @@ class ProcessaAnalise extends MY_Controller
             foreach ($regras as $item) {
                 $regra = $this->AudCon_model->getRegrasById($item);
                 $sessao = $regra->sessao;
+                  
+                 $data_processo_regra = array(
+                'id_processo_analise' => $id_processo,
+                'id_regra' => $sessao,
+                'status' => 0
+                );
+               $this->AudCon_model->addProcessamentoAnaliseRegra($data_processo_regra);
+               
+            }
+               
+            
+            $this->session->set_flashdata('message', lang("Processo Criado com sucesso!"));
+             redirect('Provin/processamentos_execucao/'.$id_processo);
+          
+        }else  {
+           
+            $this->session->set_flashdata('error', validation_errors());
+            redirect('Provin/processamentos/'.$analise);
+        }
+
+     
+    }
+    
+     function execulta_processamento($regras, $id_processo )
+    {
+        $this->sma->checkPermissions();
+
+        echo $regras.'<br>';
+        echo $id_processo;
+        
+        exit;
+         
+        if ($regras) {
+            $analises = $this->AudCon_model->getAnaliseById($analise);
+            $tabela_cliente = $analises->tabela;
+            $tabela_cliente_log = $analises->tabela_log;
+            
+            $qtde_registros = $this->AudCon_model->getMaxRegistrosCliente($tabela_cliente);
+            $qtde = $qtde_registros->quantidade;
+            
+             
+             /*
+            foreach ($regras as $item) {
+                $regra = $this->AudCon_model->getRegrasById($item);
+                $sessao = $regra->sessao;
                 
                 $this->analisaRegra($sessao, $tabela_cliente,$tabela_cliente_log, $id_processo);
                 $qtde_registros_regras = $this->AudCon_model->getQuantidadeInconsistenciaByRegra($tabela_cliente_log, $sessao, $id_processo);
@@ -71,7 +114,7 @@ class ProcessaAnalise extends MY_Controller
                 
                 /*
                  * ADICIONA O RESUMO DA ANÁLISE EM UMA TABELA PARA O DASHBOARD
-                  */
+                  
                  $data_processo_regra = array(
                 'id_processo_analise' => $id_processo,
                 'id_regra' => $sessao,
@@ -82,8 +125,9 @@ class ProcessaAnalise extends MY_Controller
                $this->AudCon_model->addProcessamentoAnaliseRegra($data_processo_regra);
                
             }
+            */
             
-            
+            /*
            // RETORNA O NÚMERO DE INCONSISTÊNCIAS
             $qtde_inconsistencias = $this->AudCon_model->getInconsistenciasProcessosAnalises($id_processo, $tabela_cliente_log);
             $qtde_incons = $qtde_inconsistencias->quantidade;
@@ -140,7 +184,7 @@ class ProcessaAnalise extends MY_Controller
             
             /*
              * REGISTRA O NÚMERO DE INCONSISTÊNCIA
-             */
+             
              
             $data_update = array(
                 'num_inconsistencias' => $qtde_incons,
@@ -155,9 +199,12 @@ class ProcessaAnalise extends MY_Controller
            // print_r($data_update); exit;
                $this->AudCon_model->updateProcessamentoAnalise($id_processo, $data_update);
              
+               
+               
+               
                /*
                 * SALVA OS DADOS SOBRE OS PRESTADORES
-                */
+                
                
               
             $prestadores =  $this->AudCon_model->getPrestadoresDistinctAnalise($tabela_cliente);
@@ -206,6 +253,8 @@ class ProcessaAnalise extends MY_Controller
             
             $this->session->set_flashdata('message', lang("Processo Realizado com sucesso!"));
              redirect('AudCon/processamentos/'.$analise);
+             * 
+             */
           
         }else  {
            
@@ -215,7 +264,6 @@ class ProcessaAnalise extends MY_Controller
 
      
     }
-    
     
      function analisaRegra($regra, $tabela, $tabela_log, $processo)
     {

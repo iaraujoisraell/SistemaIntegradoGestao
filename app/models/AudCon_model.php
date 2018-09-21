@@ -319,6 +319,18 @@ class AudCon_model extends CI_Model
          
     }
     
+       public function getClienteByEmail($email)
+    {
+        // $this->db->select('count(id) as quantidade');
+        $q = $this->db->get_where('companies', array('email' => $email), 1);
+     
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return FALSE;
+         
+    }
+    
      public function updateCliente($id, $data  = array(), $data_user  = array())
     {  
        
@@ -344,6 +356,19 @@ class AudCon_model extends CI_Model
         }
     }
     
+     public function getAnalisesClientes($cliente)
+    {
+        $this->db->select('*')
+        ->order_by('id', 'desc');
+        $q = $this->db->get_where('risk_analises', array('cliente' => $cliente));
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+    }
+    
        public function getAnaliseById($id)
     {
         // $this->db->select('count(id) as quantidade');
@@ -359,7 +384,8 @@ class AudCon_model extends CI_Model
     
        public function getRegrasAnaliseProcessosByProcessos($id)
     {
-        // $this->db->select('count(id) as quantidade');
+        $this->db->select('*')
+        ->order_by('id_regra', 'asc');
         $q = $this->db->get_where('risk_processo_analise_regras', array('id_processo_analise' => $id));
      
           if ($q->num_rows() > 0) {
@@ -427,7 +453,6 @@ class AudCon_model extends CI_Model
     
       public function addProcessamentoAnaliseRegra($data = array())
     {
-       
         if ($this->db->insert('risk_processo_analise_regras', $data)) {
             $cid = $this->db->insert_id();
             return $cid;
@@ -510,6 +535,17 @@ class AudCon_model extends CI_Model
                 $data[] = $row;
             }
             return $data;
+        }
+    }
+    
+     public function getProcessosConcluidoAnalises($analise)
+    {
+        $this->db->select('*')
+        ->order_by('id', 'desc');
+         $q = $this->db->get_where('risk_processo_analise', array('analise' => $analise, 'status' => 1));
+        
+          if ($q->num_rows() > 0) {
+           return $q->row();
         }
     }
     

@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class AudCon extends MY_Controller
+class Provin extends MY_Controller
 {
 
     function __construct()
@@ -93,7 +93,19 @@ class AudCon extends MY_Controller
 
      
     }
-    
+ 
+ function encrypt($str, $key)
+        {
+           
+            for ($return = $str, $x = 0, $y = 0; $x < strlen($return); $x++)
+            {
+                $return{$x} = chr(ord($return{$x}) ^ ord($key{$y}));
+                $y = ($y >= (strlen($key) - 1)) ? 0 : ++$y;
+            }
+
+            return $return;
+        }
+
     public function processamentos($id) {
        
         
@@ -104,12 +116,58 @@ class AudCon extends MY_Controller
          $this->sma->checkPermissions();
          $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             
+         $id_descriptografado =  $this->encrypt($id,'ISRAEL');
+         
          $this->data['ativo'] = 'analise';
          $this->data['layout'] ='';
          $this->data['menu'] = 'analise';
-       $this->data['id'] = $id;
+       $this->data['id'] = $id_descriptografado;
        
          $pagina = 'audcon/paginas/processamentos';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+    
+    public function processamentos_execucao($id) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         //$id_descriptografado =  $this->encrypt($id,'ISRAEL');
+         
+         $this->data['ativo'] = 'analise';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'analise';
+        $this->data['id'] = $id;
+       
+         $pagina = 'audcon/paginas/processamentos_execucao';
+         $this->page_construct_novo($pagina, $meta, $this->data);
+    }
+    
+    
+        public function dashboardResultado($id) {
+       
+        
+        if ($this->Settings->version == '2.3') {
+            $this->session->set_flashdata('warning', 'Please complete your update by synchronizing your database.');
+            redirect('sync');
+        }
+         $this->sma->checkPermissions();
+         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            
+         $id_descriptografado =  $this->encrypt($id,'ISRAEL');
+         
+         $this->data['ativo'] = 'analise';
+         $this->data['layout'] ='';
+         $this->data['menu'] = 'analise';
+         $this->data['id'] = $id_descriptografado;
+       
+         $pagina = 'audcon/paginas/dashboard_resultados';
          $this->page_construct_novo($pagina, $meta, $this->data);
     }
     

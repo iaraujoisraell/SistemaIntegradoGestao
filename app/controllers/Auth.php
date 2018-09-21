@@ -239,7 +239,7 @@ class Auth extends MY_Controller
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => '#', 'page' => lang('users')));
         $meta = array('page_title' => lang('users'), 'bc' => $bc);
-        $this->page_construct('auth/index', $meta, $this->data);
+        $this->page_construct('sig/auth/index', $meta, $this->data);
     }
 
     function getUsers()
@@ -381,7 +381,7 @@ class Auth extends MY_Controller
 
         $bc = array(array('link' => base_url(), 'page' => lang('home')), array('link' => site_url('auth/users'), 'page' => lang('users')), array('link' => '#', 'page' => lang('profile')));
         $meta = array('page_title' => lang('profile'), 'bc' => $bc);
-        $this->page_construct('auth/profile', $meta, $this->data);
+        $this->page_construct('sig/auth/profile', $meta, $this->data);
     }
 
     function edit_profile($id = NULL)
@@ -416,7 +416,7 @@ class Auth extends MY_Controller
         
         if ($this->form_validation->run() === TRUE && $this->ion_auth->update($user->id, $data)) {
             $this->session->set_flashdata('message', lang('user_updated'));
-            redirect("auth/profile/" . $id);
+            redirect("sig/auth/profile/" . $id);
         } else {
             $this->session->set_flashdata('error', validation_errors());
             redirect($_SERVER["HTTP_REFERER"]);
@@ -441,34 +441,38 @@ class Auth extends MY_Controller
     }
 
 
-    function login_ad($m = NULL)
+     function login($m = NULL)
     {
+      
+        $usuario = $this->session->userdata('user_id');
+        $cadastroUsuario = $this->site->getPerfilAtualByID($usuario);
+        $perfilAtualUsuario = $cadastroUsuario->group_id;
         
-        $_mat = $this->input->post('identity');
-        $_pw = $this->input->post('password');
+        //echo $usuario; exit;
         
-        
-        if (empty($_mat) or empty($_pw)) {
+        if ($this->loggedIn) {
+            $this->session->set_flashdata('error', $this->session->flashdata('error'));
             
-            echo json_encode(array('error' => 'Parametros inválidos')); die();
-            $this->session->set_flashdata('error', lang('Parametros inválidos'));
-            // $this->load->view($this->theme . 'sig/auth/login', $this->data);
-            redirect('login');
-        } else {
-           
-	$ldap_connection = ldap_connect('10.11.20.2');
-	ldap_set_option($ldap_connection, LDAP_OPT_PROTOCOL_VERSION, 3) or die('Unable to set LDAP protocol version');
-	ldap_set_option($ldap_connection, LDAP_OPT_REFERRALS, 0); 
-	if (!@ldap_bind($ldap_connection, $_mat . '@unimedmanaus.local', $_pw)) {
-		echo json_decode(array('error' => 'Usuário ou Senha inválida')); 
-                $this->session->set_flashdata('error', lang('Usuário ou Senha inválida'));
-                // $this->load->view($this->theme . 'sig/auth/login', $this->data);
-                
-                /*
-                 * SE NAO ENCONTRAR VERIFICA NO BD DO SIG
-                 */
-                
-                if ($this->ion_auth->login_original($this->input->post('identity'), $this->input->post('password'), $remember)) {
+           if($perfilAtualUsuario==5){
+             
+               redirect('Audcon_cli');
+           }else if($perfilAtualUsuario !=5){
+            redirect('Provin');
+           }else{
+               
+           }
+        }
+        $this->data['title'] = lang('login');
+
+        if ($this->Settings->captcha) {
+            $this->form_validation->set_rules('captcha', lang('captcha'), 'required|callback_captcha_check');
+        }
+
+        if ($this->form_validation->run() == true) {
+
+              $remember = (bool)$this->input->post('remember');
+
+            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
                 if ($this->Settings->mmode) {
                     if (!$this->ion_auth->in_group('owner')) {
                         $this->session->set_flashdata('error', lang('site_is_offline_plz_try_later'));
@@ -484,9 +488,9 @@ class Auth extends MY_Controller
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
                 
                 if($perfilAtualUsuario==5){
-                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Welcome';    
+                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Audcon_cli';    
                 }else  if($perfilAtualUsuario != 5){
-                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu';    
+                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Provin';    
                 }
                 
               
@@ -496,166 +500,71 @@ class Auth extends MY_Controller
                 $this->session->set_flashdata('error', $this->ion_auth->errors());
                 redirect('login');
             }
-                
-                
-	} else {
+          
             
-		$ldap_base_dn = 'DC=unimedmanaus,DC=local';
-		$search_filter='samaccountname=' . $_mat;
-		
-		$attributes = array();
-		$attributes[] = 'givenname';
-		$attributes[] = 'cn';
-		$attributes[] = 'samaccountname';
-		$attributes[] = 'sn';
-		$attributes[] = 'mail';
-		$attributes[] = 'description';
-		$attributes[] = 'department';
-		
-		$result = @ldap_search($ldap_connection, $ldap_base_dn, $search_filter, $attributes);
-		$entries = @ldap_get_entries($ldap_connection, $result);
-		
-		foreach ($entries as $_entrada) {
-			if (empty($_entrada['cn'][0])) { continue; }
-			
-			$nome 	= @$_entrada['cn'][0];
-			$cargo 	= @$_entrada['description'][0];
-			$_resposta['setor'] 	= @$_entrada['department'][0];
-			$matricula = @$_entrada['samaccountname'][0];
-			$email 	= @$_entrada['mail'][0];
-                        
-			//echo json_encode($_resposta);
-                       
-		}
-                  
-                /*
-                 * VERIFICA SE EXISTE O CADASTRO DO MESMO NO SIG
-                 */
-                $cadastroUsuario = $this->site->getUserbyemail($email);
-                $id_usuario = $cadastroUsuario->id;
-                $perfilAtualUsuario = $cadastroUsuario->group_id;
-                
-                 
-                if($id_usuario){
-                   
-                    /*
-                     * ATUALIZAÇÃO DE CADASTRO
-                     * Se existir no sig, verifica se tem a matrícula cadastrada, se n tiver atualiza o cadastro
-                     */
-                    
-                    if($cadastroUsuario->matricula){
-                          
-                        redirect('login/'.$cadastroUsuario->matricula);
-                        /*
-                         if($perfilAtualUsuario==5){
-                             redirect('Welcome');
-                           }else if($perfilAtualUsuario !=5){
-                             // echo 'aqui '; exit;
-                             
-                             //echo 'aqui 2'; exit;
-                           }
-                         * 
-                         */
-                    }else{
-                      
-                        
-                        $data = array('matricula' => $matricula, 'cargo' => $cargo, 'first_name' => $nome, 'last_name' => '');
-                        $this->site->updateMatriculaUser($id_usuario, $data);
-                        
-                        $cadastroUsuario2 = $this->site->getUserbyemail($email);
-                        redirect('login/'.$cadastroUsuario2->matricula);
-                        
-                    }
-                       
-                    
-                   
-                }else{
-                    // echo 'aqui 2'; exit;
-                    $this->session->set_flashdata('error', lang('Você ainda não tem cadastro, entre em contato com a TI.'));
-                    // $this->load->view($this->theme . 'sig/auth/login', $this->data);
-                    
-                    redirect('login');
-                    
-                    
-                    //    $this->site->updateMatriculaUser($id_usuario, $data);
-                    /*
-                     * FAZ O CADASTRO
-                     * 
-                     * $data = array(  'matricula' => $matricula,
-                                    'cargo' => $cargo, 
-                                    'first_name' => $nome, 
-                                    'active' => '0',
-                                    'email' => $email);
-                     */
-                }
-                
-	}
-    }
- 
-       
-        //  $this->load->view($this->theme . 'sig/auth/login', $this->data);
-    }
-    
-    function login($m = NULL)
-    {
-      
-      //  exit;
-        
-        if ($m) {
-            
-            $remember = (bool)$this->input->post('remember');
-
-            if ($this->ion_auth->login($m,  $this->input->post('password'), $remember)) {
-              
-                
-                $usuario = $this->session->userdata('user_id');
-                $cadastroUsuario = $this->site->getPerfilAtualByID($usuario);
-                $perfilAtualUsuario = $cadastroUsuario->group_id;
-                $this->session->set_flashdata('message', $this->ion_auth->messages());
-                
-                if($perfilAtualUsuario==5){
-                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Welcome';    
-                }else  if($perfilAtualUsuario != 5){
-                    
-                   /*
-                    * verifica se tem acesso a mais de 1 sistema
-                    */                    
-                    $cadastroUsuario = $this->site->getPerfilAtualSistemasByID($usuario);
-                    $quantidade = $cadastroUsuario->quantidade;
-                  
-                          $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'sig/menu_sistemas'; 
-                  
-                    /*
-                    if($quantidade > 1){
-                        $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
-                    }else{
-                       $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu';    
-                    }
-                     * 
-                     */
-                }
-                
-              
-                redirect($referrer);
-                 
-            } else {
-                $this->session->set_flashdata('error', $this->ion_auth->errors());
-                redirect('login');
-            }
         } else {
 
             $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
             $this->data['message'] = $this->session->flashdata('message');
-           
+            if ($this->Settings->captcha) {
+                $this->load->helper('captcha');
+                $vals = array(
+                    'img_path' => './assets/captcha/',
+                    'img_url' => site_url() . 'assets/captcha/',
+                    'img_width' => 150,
+                    'img_height' => 34,
+                    'word_length' => 5,
+                    'colors' => array('background' => array(255, 255, 255), 'border' => array(204, 204, 204), 'text' => array(102, 102, 102), 'grid' => array(204, 204, 204))
+                );
+                $cap = create_captcha($vals);
+                $capdata = array(
+                    'captcha_time' => $cap['time'],
+                    'ip_address' => $this->input->ip_address(),
+                    'word' => $cap['word']
+                );
+
+                $query = $this->db->insert_string('captcha', $capdata);
+                $this->db->query($query);
+                $this->data['image'] = $cap['image'];
+                $this->data['captcha'] = array('name' => 'captcha',
+                    'id' => 'captcha',
+                    'type' => 'text',
+                    'class' => 'form-control',
+                    'required' => 'required',
+                    'placeholder' => lang('type_captcha')
+                );
+            }
+
+            $this->data['identity'] = array('name' => 'identity',
+                'id' => 'identity',
+                'type' => 'text',
+                'class' => 'form-control',
+                'placeholder' => lang('email'),
+                'value' => $this->form_validation->set_value('identity'),
+            );
+            $this->data['password'] = array('name' => 'password',
+                'id' => 'password',
+                'type' => 'password',
+                'class' => 'form-control',
+                'required' => 'required',
+                'placeholder' => lang('password'),
+            );
+            $this->data['allow_reg'] = $this->Settings->allow_reg;
+            if ($m == 'db') {
+                $this->data['message'] = lang('db_restored');
+            } elseif ($m) {
+                $this->data['error'] = lang('we_are_sorry_as_this_sction_is_still_under_development.');
+            }
 
             $this->load->view($this->theme . 'sig/auth/login', $this->data);
-        }
+        }  
+        
     }
 
     function login_sig($m = NULL)
     {
      
-        
+       
         $usuario = $this->session->userdata('user_id');
         $cadastroUsuario = $this->site->getPerfilAtualByID($usuario);
         $perfilAtualUsuario = $cadastroUsuario->group_id;
@@ -666,10 +575,9 @@ class Auth extends MY_Controller
             $this->session->set_flashdata('error', $this->session->flashdata('error'));
             
            if($perfilAtualUsuario==5){
-             
-               redirect('Welcome');
+            redirect('Audcon_cli');
            }else if($perfilAtualUsuario !=5){
-            redirect('Sig/menu');
+            redirect('Provin');
            }else{
                
            }
@@ -686,9 +594,9 @@ class Auth extends MY_Controller
         
         if (($login)&&($senha)) {
            // echo 'aqui 1'; exit;
-            $remember = 1;// (bool)$this->input->post('remember');
+            $remember = (bool)$this->input->post('remember');
 
-            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), $remember)) {
+            if ($this->ion_auth->login($this->input->post('identity'), $this->input->post('password'), 1)) {
                
                 if ($this->Settings->mmode) {
                     if (!$this->ion_auth->in_group('owner')) {
@@ -699,19 +607,21 @@ class Auth extends MY_Controller
                 if ($this->ion_auth->in_group('customer') || $this->ion_auth->in_group('supplier')) {
                     redirect('auth/logout/1');
                 }
+                
                 $usuario = $this->session->userdata('user_id');
                 $cadastroUsuario = $this->site->getPerfilAtualByID($usuario);
                 $perfilAtualUsuario = $cadastroUsuario->group_id;
                 $this->session->set_flashdata('message', $this->ion_auth->messages());
                 
                 if($perfilAtualUsuario==5){
-                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Welcome';    
+                $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Audcon_cli'; 
+                
                 }else  if($perfilAtualUsuario != 5){
                  
                     $cadastroUsuario = $this->site->getPerfilAtualSistemasByID($usuario);
                     $quantidade = $cadastroUsuario->quantidade;
                     
-                     $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Sig/menu_sistemas'; 
+                     $referrer = $this->session->userdata('requested_page') ? $this->session->userdata('requested_page') : 'Provin'; 
                     /*
                     if($quantidade > 1){
                        
@@ -1093,7 +1003,7 @@ class Auth extends MY_Controller
            // $this->data['warehouses'] = $this->site->getAllWarehouses();
             $bc = array(array('link' => site_url('home'), 'page' => lang('home')), array('link' => site_url('auth/users'), 'page' => lang('users')), array('link' => '#', 'page' => lang('create_user')));
             $meta = array('page_title' => lang('users'), 'bc' => $bc);
-            $this->page_construct('auth/create_user', $meta, $this->data);
+            $this->page_construct('sig/auth/create_user', $meta, $this->data);
         }
     }
 

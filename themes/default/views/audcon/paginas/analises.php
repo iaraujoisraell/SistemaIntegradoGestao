@@ -13,7 +13,20 @@
         <li class="active">Análise</li>
       </ol>
     </section>
+  <?php
+ 
+ function encrypt($str, $key)
+        {
+           
+            for ($return = $str, $x = 0, $y = 0; $x < strlen($return); $x++)
+            {
+                $return{$x} = chr(ord($return{$x}) ^ ord($key{$y}));
+                $y = ($y >= (strlen($key) - 1)) ? 0 : ++$y;
+            }
 
+            return $return;
+        }
+ ?>
     <!-- Main content -->
     <section class="content">
          <?php if ($Settings->mmode) { ?>
@@ -76,6 +89,8 @@
                         $cliente = $this->companies_model->getCompanyByID($cli->cliente);
                         
                         $status = $cli->status;
+                        
+                        $id_riptografado =  encrypt($cli->id,'ISRAEL');
                 ?>   
                 
                 <tr>
@@ -87,12 +102,10 @@
                   <td><?php echo $cli->carga; ?></td>
                   <td style="background-color: <?php if($status == 0){ ?> gray <?php }else if($status == 1){ ?> orange <?php }else if($status == 2){ ?> green  <?php }  ?>"><?php if($status == 0){ ?> ABERTO  <?php }else if($status == 1){ ?> EM ANÁLISE <?php }else if($status == 2){ ?> CONCLUÍDO  <?php }  ?></td>
                   <td>
-                      <a href="audcon/edit_analise/<?php echo $cli->id; ?>" ><i class="fa fa-edit"></i> Editar</a>
-                                          
-                </td>
+                      <a href="Provin/edit_analise/<?php echo $cli->id; ?>" ><i class="fa fa-edit"></i> Editar</a>
+                  </td>
                   <td>
-                      <a href="audcon/processamentos/<?php echo $cli->id; ?>" class="btn btn-block btn-danger"><i class="fa fa-gears"></i> Análises</a>
-                    
+                      <a href="Provin/processamentos/<?php echo $id_riptografado; ?>" class="btn btn-block btn-danger"><i class="fa fa-gears"></i> Análises</a>
                   </td>
                                           
                 </tr>
